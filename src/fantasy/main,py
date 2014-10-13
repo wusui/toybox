@@ -1,0 +1,56 @@
+"""
+Yahoo Fantasy Football information publisher.
+
+Produces two files:
+    temporary.html -- Fantasy results for the current week.
+    diary.html -- A compilation of fantasy results for the past weeks.
+"""
+from urllib2 import URLError
+from yahoofoot.htmlgen import display_new_page
+from yahoofoot.tables import get_tables
+from yahoofoot.utilities import get_configuration
+from yahoofoot.extract_data import get_teams
+
+
+def fantasy_football(short=True):
+    """
+    Main entry point for Fantasy Football information display generators.
+
+    Input:
+        short -- Generate display for this week (temporary.html) if True.
+                 Generate display for all past weeks (diary.html) if False.
+
+    Read configuration data from config.cfg.  Important information here is
+    'my_team' (the name of my team), 'league' (Yahoo league number), and the
+    starting date of this season (Tuesday of week 1).
+
+    All URLError exceptions are passed up to this routine, which prints a
+    simple message and exits.
+    """
+    conf = get_configuration('config.cfg', 'YahooFootball')
+    league = conf['league']
+    weekno = conf['current_week']
+    my_team = conf['my_team']
+    try:
+        team_names = get_teams(league)
+        teamno = int(team_names[0][my_team])
+        if short:
+            tables = get_tables(league, weekno, teamno)
+            display_new_page(weekno, [tables], {})
+        else:
+            tbl_set = []
+            parms = {'out_fname': 'diary.html',
+                     'header': 'My Fantasy Diary',
+                     'highlight_win': True}
+            for ind in range(1, weekno):
+                print "Week %s" %  ind
+                tbl_set.append(get_tables(league, ind, teamno))
+            if len(tbl_set) > 0:
+                display_new_page(1, tbl_set, parms)
+    except URLError:
+        print 'Internet Failure'
+
+
+if __name__ == '__main__':
+    fantasy_football()
+    fantasy_football(False)
