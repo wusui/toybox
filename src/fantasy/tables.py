@@ -147,4 +147,3 @@ def get_best_unpicked(league, week, picked):
         retval[0].extend(alist)
         retval[1].update(adict)
     return retval
-
