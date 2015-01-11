@@ -1,7 +1,8 @@
+#    Copyright (C) 2014, 2015  Warren Usui (warrenusui@eartlink.net)
+#    Licensed under the GPL 3 license. (See ./COPYING)
 """
-Created on Feb 24, 2014
-
-@author: Warren Usui
+Methods and objects used to support the solver method.  Solver is
+called by both the Tkinter based code and from the sudoku.py cgi script.
 """
 
 BIG_SQ_DIM = 3
@@ -208,3 +209,4 @@ def solver(layout):
         if retv[0] == 'Solved':
             return retv
     return ('partial solution', local)
+    
