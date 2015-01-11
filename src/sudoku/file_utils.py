@@ -1,8 +1,9 @@
+#    Copyright (C) 2014, 2015  Warren Usui (warrenusui@eartlink.net)
+#    Licensed under the GPL 3 license. (See ./COPYING)
 """
-Created on Feb 25, 2014
+Methods used to support the tkinter based sudoku sover gui.
+"""
 
-@author: Warren Usui
-"""
 import inspect
 import os
 import Tkinter
