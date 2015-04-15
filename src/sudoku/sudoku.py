@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #    Copyright (C) 2015  Warren Usui (warrenusui@eartlink.net)
-#    Licensed under the GPL 3 license. (See ./COPYING)
+#    Licensed under the GPL 3 license. 
 """
 Cgi script to collect sudoku puzzle data.  Returns a solution, if possible.
 """
