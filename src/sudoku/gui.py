@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #    Copyright (C) 2014, 2015  Warren Usui (warrenusui@eartlink.net)
-#    Licensed under the GPL 3 license. (See ./COPYING)
+#    Licensed under the GPL 3 license.
 """
 Main entry point for thte Tkinter based interface for the sudoku solver.
 """
