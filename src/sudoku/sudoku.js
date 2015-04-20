@@ -86,7 +86,7 @@ function sudoku(){
 function solver() {
     //
     // Make sure user input has no errors.
-    // Call recursive solver routine.
+    // Call solver routine.
     // If solution is found, store results on canvas.
     //
     if (!validate()) {
@@ -97,7 +97,7 @@ function solver() {
         alert('Not enough numbers provided');
         return;
     }
-    solution = findSol(board);
+    findSol(board);
 }
 
 function cleanBoard() {
@@ -355,7 +355,7 @@ function validate() {
 
 function findSol(inboard) {
     //
-    // Marshall the solved board into a string of values.
+    // Marshall the board into a string of values and POST it.
     //
     var columns = [];
     for (var i=0; i < SUDOKU_SIZE; i++) {
@@ -404,13 +404,20 @@ function server_sent_response() {
     {
         var answer = server.responseText.split("");
         var indx = 0;
+        var complain = false;
         for (var i=0; i<SUDOKU_SIZE; i++) {
             for (var j=0; j<SUDOKU_SIZE; j++) {
                 if (board[i][j] === ' ') {
                     setText(BLUE, i, j, answer[indx]);
                 }
+                if (answer[indx] == ' ') {
+                    complain = true;
+                }
                 indx++;
             }
+        }
+        if (complain) {
+            alert('No complete solution could be found');
         }
     }
 }

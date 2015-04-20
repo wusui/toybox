@@ -31,14 +31,22 @@ def getpost():
         for j in range(0,9):
            tplate[i].append(pieces[indx])
            indx += 1
-    _, result = solver(tplate)
+    info_res, result = solver(tplate)
+    logging.info('info_res:')
+    logging.info(info_res)
+    if info_res == 'failure':
+        logging.info('failure')
+        print "Content-type: text/html"
+        print
+        print instr.replace('0', ' ')
+        return
     outstr = []
     for i in range(0,9):
         for j in range(0,9):
             outstr.append(result[i][j])
     print "Content-type: text/html"
     print
-    response = ''.join(outstr).replace('0',' ')
+    response = ''.join(outstr).replace('0', ' ')
     logging.info('response: ')
     logging.info(response)
     print response
