@@ -84,6 +84,30 @@ def chk_badvals(local):
                         (group_type, rowcl + 1), local)
 
 
+def chk_unsolvable(local):
+    """
+    Return true if it is known that the puzzle cannot be solved.
+    """
+    big_pat = []
+    for row in range(0, SQ_NUMB):
+        big_pat.append([])
+        for col in range(0, SQ_NUMB):
+            big_pat[row].append([])
+            set_info_arr(big_pat, row, col, local)
+    for rowcl in range(0, SQ_NUMB):
+        for _, func_array in [get_row(rowcl), get_col(rowcl),
+                                       box_facade(rowcl)]:
+            hist1 = get_hist(func_array, local)
+            for coord in func_array:
+                if not local[coord[0]][coord[1]] == '0':
+                    continue
+                for numb in big_pat[coord[0]][coord[1]]:    
+                    hist1[numb - 1] += 1
+            if min(hist1) == 0:
+                return True
+    return False
+
+
 def chk_solved(local):
     """
     Return 'Solved' string and grid if solved.
@@ -174,6 +198,8 @@ def solver(layout):
     local = []
     for row in range(0, SQ_NUMB):
         local.append(layout[row][:])
+    if chk_unsolvable(local): 
+        return 'failure', local
     retv = chk_badvals(local)
     if retv:
         return retv
@@ -209,4 +235,3 @@ def solver(layout):
         if retv[0] == 'Solved':
             return retv
     return ('partial solution', local)
-    
