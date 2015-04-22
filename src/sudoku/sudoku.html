@@ -14,17 +14,8 @@
         <button onclick="sudokuNamespace.solver()" id="solvebutton">SOLVE</button>
         <button onclick="sudokuNamespace.cleanBoard()">ERASE</button>
         <button onclick="sudokuNamespace.cleanOther()">CLEAN</button>
-        <button onclick="sudokuNamespace.help()" id="helpbutton">HELP</button>
+        <button onclick="sudokuNamespace.help()">HELP</button>
         <br>
     </div>
-    <dialog id="helpme">Sudoku Solver:<br>
-          If a square is clicked on, that square becomes highlighted.<br>
-          Typing a number on a highlighted square enters that number<br>
-          into the square. The space bar clears a square.<br><br>
-          The SOLVE button attempts to solve the puzzle.<br>
-          The ERASE button clears out all numbers in the puzzle.<br>
-          The CLEAN button clears out data not entered by the user.<br>
-          The HELP button toggles this dialog (CLOSE clears).<br>
-    </dialog>
 </body>
 </html>
