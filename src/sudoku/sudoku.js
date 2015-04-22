@@ -43,6 +43,7 @@ var Y_CHAR_OFF = 31;            // Character offset in cell
 var ONE_CHAR = 49;              // Keycode for '1'
 var NINE_CHAR = 57;             // Keycode for '9'
 var BLANK_CHAR = 32;            // Keycode for ' '
+var HELP_MSG = 'Sudoku Solver:\n If a square is clicked on, that square becomes highlighted.\nTyping a number on a highlighted square enters that number\ninto the square. The space bar clears a square.\n\nThe SOLVE button attempts to solve the puzzle.\nThe ERASE button clears out all numbers in the puzzle.\nThe CLEAN button clears out data not entered by the user.\n';
 
 //
 // Values that will be modified.
@@ -131,20 +132,9 @@ function cleanOther() {
 
 function help() {
     //
-    // Display the help message (gotten from HTML data)
-    // in a dialog.  Toggles on and off on subsequent
-    // calls.
+    // Display the help message 
     //
-    var helpmessage = document.getElementById("helpme");
-    var helpbtn = document.getElementById("helpbutton");
-    if (helpbtn.textContent == "HELP") {
-        helpbtn.textContent = "CLOSE";
-        helpmessage.show();
-    }
-    else {
-        helpbtn.textContent = "HELP";
-        helpmessage.close();
-    }
+    alert(HELP_MSG);
 }
 //
 
