@@ -4,6 +4,7 @@
      Licensed under the GPL 3 license. -->
 <head>
     <link rel="stylesheet" type="text/css" href="sudoku.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="sudoku.js"></script>
 </head>
 <body onload="sudokuNamespace.sudoku();">
@@ -14,8 +15,19 @@
         <button onclick="sudokuNamespace.solver()" id="solvebutton">SOLVE</button>
         <button onclick="sudokuNamespace.cleanBoard()">ERASE</button>
         <button onclick="sudokuNamespace.cleanOther()">CLEAN</button>
-        <button onclick="sudokuNamespace.help()">HELP</button>
+        <button onclick="sudokuNamespace.help()" id="helpbutton">HELP</button>
         <br>
     </div>
+    <div id="helpme" class="helptext">
+        <p style="padding: 6px; background-color: white; border: black 2px solid">
+            If a square is clicked on, that square becomes highlighted.<br>
+            Typing a number on a highlighted square enters that number<br>
+            into the square. The space bar clears a square.<br><br>
+            The SOLVE button attempts to solve the puzzle.<br>
+            The ERASE button clears out all numbers in the puzzle.<br>
+            The CLEAN button clears out data not entered by the user.<br>
+            The HELP button toggles this dialog (CLOSE clears).<br>
+        </p>
+    </div>  
 </body>
 </html>
