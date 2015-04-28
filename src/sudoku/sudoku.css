@@ -16,6 +16,13 @@ canvas {
 }
 
 .button {
-    position: absolute:
+    position: absolute;
     top: 50%
+}
+
+.helptext {
+    display: none;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto
 }
