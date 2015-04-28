@@ -135,15 +135,12 @@ function help() {
     // in a dialog.  Toggles on and off on subsequent
     // calls.
     //
-    var helpmessage = document.getElementById("helpme");
     var helpbtn = document.getElementById("helpbutton");
     if (helpbtn.textContent == "HELP") {
         helpbtn.textContent = "CLOSE";
-        helpmessage.show();
     }
     else {
         helpbtn.textContent = "HELP";
-        helpmessage.close();
     }
 }
 //
