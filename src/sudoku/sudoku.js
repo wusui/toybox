@@ -94,7 +94,8 @@ function solver() {
     }
     cleanOther();
     if (not_enough_givens()) {
-        alert('Not enough numbers provided');
+        $("<div>Not enough numbers provided</div>").dialog(
+            {modal: true, height: 100, width: 320, title: 'INPUT ERROR'});
         return;
     }
     findSol(board);
@@ -293,7 +294,7 @@ function validate() {
     //         same row, column, or in the same 3x3 square as another
     //         cell with the same numeric value.  These cells (with
     //         duplicate entries), get pushed onto bad_ones.
-    // Step 3: Highlight the bad cells in red and alert the user if
+    // Step 3: Highlight the bad cells in red and tell the user if
     //         any invalid entries are found.  Return true if everything
     //         is valid.
     //
@@ -344,7 +345,8 @@ function validate() {
             colorSquare(LIGHTRED, tmp_x, tmp_y);
             setText(BLACK_FG, tmp_x, tmp_y, board[tmp_x][tmp_y]);
         }
-        alert('Input is invalid.  Check the squares marked in red');
+        $("<div>Input is invalid.  Check the squares marked in red</div>").dialog(
+            {modal: true, height: 100, width: 500, title: 'INPUT ERROR'});
         return false;
     }
     return true;
@@ -414,7 +416,8 @@ function server_sent_response() {
             }
         }
         if (complain) {
-            alert('No complete solution could be found');
+            $("<div>No complete solution could be found</div>").dialog(
+               {modal: true, height: 100, width: 400, title: 'INPUT ERROR'});
         }
     }
 }
@@ -445,7 +448,7 @@ function sendpost(postdata) {
 }();
 
 
-// Jquery code to handle HELP button
+// Jquery code to handle HELP button (probably should be moved)
 $(document).ready(function(){
     $("#helpbutton").click(function(){
         $("#helpme").toggle();
