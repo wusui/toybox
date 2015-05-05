@@ -21,6 +21,8 @@ sudokuNamespace = function() {
  *            of blanks and digits.
  *   lastx -- x-coordinate of the last key-click
  *   lasty -- y-coordinate of the last key-click
+ *   size_edge -- pixel size of edge
+ *   size_cell -- pixel size of cell
  *   server -- http server variable used for POST
  *
  * The layout of the 9x9 board array is from left to right, top to
@@ -36,10 +38,6 @@ var BLACK_FG = '#000000';       // Black (used in numbers)
 var YELLOW = '#FFFF00';         // High-lighter
 var LIGHTRED = '#FF8080';       // Bad entry indicator
 var BLUE = '#0000FF';           // Square found by solver
-var SIZE_EDGE = 10;             // Width of border
-var SIZE_CELL = 40;             // Size of Sudoku Square
-var X_CHAR_OFF = 11;            // Character offset in cell
-var Y_CHAR_OFF = 31;            // Character offset in cell
 var ONE_CHAR = 49;              // Keycode for '1'
 var NINE_CHAR = 57;             // Keycode for '9'
 var BLANK_CHAR = 32;            // Keycode for ' '
@@ -50,11 +48,11 @@ var BLANK_CHAR = 32;            // Keycode for ' '
 var canvas;
 var context;
 var board = [];
-var groups = [];
 var lastx = SUDOKU_SIZE;
 var lasty = SUDOKU_SIZE;
+var size_edge;
+var size_cell;
 var server;
-//
 
 /**********************************************************************
  *
@@ -77,6 +75,10 @@ function sudoku(){
     canvas = document.getElementById('mycanvas');
     canvas.setAttribute("tabindex", 0);
     context = canvas.getContext('2d');
+    commonNamespace.init(context, canvas, SUDOKU_SIZE, SUDOKU_SIZE);
+    dims = commonNamespace.getSizes();
+    size_edge = dims[0];
+    size_cell = dims[1];
     drawBoard();
     cleanBoard();
     canvas.addEventListener("mousedown", getPosition, false);
@@ -110,7 +112,7 @@ function cleanBoard() {
         board[i] = [];
         for (var j = 0; j < SUDOKU_SIZE; j++) {
             board[i].push(' ');
-            colorSquare(WHITE_BG, i, j);
+            commonNamespace.colorSquare(WHITE_BG, i, j);
         }
     }
 }
@@ -124,8 +126,8 @@ function cleanOther() {
     }
     for (var i = 0; i < SUDOKU_SIZE; i++) {
         for (var j = 0; j < SUDOKU_SIZE; j++) {
-            colorSquare(WHITE_BG, i, j);
-            setText(BLACK_FG, i, j, board[i][j]);
+            commonNamespace.colorSquare(WHITE_BG, i, j);
+            commonNamespace.setText(BLACK_FG, i, j, board[i][j]);
         }
     }
 }
@@ -161,22 +163,15 @@ function getPosition(event) {
     //     Un-highlight the previous location.
     //     Highlight the new location.
     //
-    var x = event.clientX + document.body.scrollLeft +
-            document.documentElement.scrollLeft;
-    var y = event.clientY + document.body.scrollTop +
-            document.documentElement.scrollTop;
-    x -= canvas.offsetLeft;
-    y -= canvas.offsetTop;
-    var xx = Math.floor((x - SIZE_EDGE) / SIZE_CELL);
-    var yy = Math.floor((y - SIZE_EDGE) / SIZE_CELL);
-    if (xx >= SUDOKU_SIZE  || xx < 0 || yy >= SUDOKU_SIZE || yy < 0) {
+    coords = commonNamespace.getDispPos()
+    if (coords[0] >= SUDOKU_SIZE  || coords[0] < 0 || coords[1] >= SUDOKU_SIZE || coords[1] < 0) {
         return;
     }
     if (lastx < SUDOKU_SIZE  && lastx >= 0 && lasty < SUDOKU_SIZE && lasty >= 0) {
         setNumbers(board[lastx][lasty], WHITE_BG);
     }
-    lastx = xx;
-    lasty = yy;
+    lastx = coords[0];
+    lasty = coords[1];
     setNumbers(board[lastx][lasty], YELLOW);
 }
 
@@ -208,9 +203,9 @@ function drawBoard(){
     //
     // Draw the 9x9 sudoku grid (complicated by drawing thick 3x3 lines)
     //
-    var p = SIZE_EDGE;
-    var ssize = SUDOKU_SIZE * SIZE_CELL;
-    for (var x = 0; x <= ssize; x += SIZE_CELL) {
+    var p = size_edge;
+    var ssize = SUDOKU_SIZE * size_cell;
+    for (var x = 0; x <= ssize; x += size_cell) {
         if (x % (ssize / 3) === 0) {
             context.fillRect(x+p, p, 2, ssize);
             context.fillRect(p, x+p, ssize+2, 2);
@@ -225,55 +220,16 @@ function drawBoard(){
     context.stroke();
 }
 
-function convertLoc(indx) {
-    //
-    // Given a pixel address, return square location in grid.
-    //
-    var retv = (indx * SIZE_CELL) + SIZE_EDGE + 1;
-    var sizev = SIZE_CELL - 1;
-    if (indx % 3 === 0) {
-        retv += 1;
-        sizev -= 1;
-    }
-    return [retv, sizev];
-}
-
-function colorSquare(color, xval, yval) {
-    //
-    // Color the square indicated by the xval and yval
-    // parameters with the color indicated by the color
-    // parameter.
-    //
-    context.fillStyle = color;
-    if (xval < 0 || xval >= SUDOKU_SIZE || yval < 0 || yval >= SUDOKU_SIZE) {
-        return;
-    }
-    var xinfo = convertLoc(xval);
-    var yinfo = convertLoc(yval);
-    context.fillRect(xinfo[0], yinfo[0], xinfo[1], yinfo[1]);
-}
 
 function setNumbers(charv1, color) {
     //
     // Set the character in charv1 as a square value, after
     // setting the square's color to the color parameter.
     //
-    colorSquare(color, lastx, lasty);
-    setText(BLACK_FG, lastx, lasty, charv1);
+    commonNamespace.colorSquare(color, lastx, lasty);
+    commonNamespace.setText(BLACK_FG, lastx, lasty, charv1);
     board[lastx][lasty] = charv1;
 }
-
-function setText(color, xparm, yparm, dispval) {
-    //
-    // Set dispval in the grid
-    //
-    context.font = '30px Arial';
-    context.fillStyle = color;
-    var xinfo = convertLoc(xparm);
-    var yinfo = convertLoc(yparm);
-    context.fillText(dispval, xinfo[0] + X_CHAR_OFF, yinfo[0] + Y_CHAR_OFF);
-}
-//
 
 /**********************************************************************
  *
@@ -342,8 +298,8 @@ function validate() {
         for (var i2=0; i2<bad_ones.length; i2++) {
             var tmp_x = bad_ones[i2][0];
             var tmp_y = bad_ones[i2][1];
-            colorSquare(LIGHTRED, tmp_x, tmp_y);
-            setText(BLACK_FG, tmp_x, tmp_y, board[tmp_x][tmp_y]);
+            commonNamespace.colorSquare(LIGHTRED, tmp_x, tmp_y);
+            commonNamespace.setText(BLACK_FG, tmp_x, tmp_y, board[tmp_x][tmp_y]);
         }
         $("<div>Input is invalid.  Check the squares marked in red</div>").dialog(
             {modal: true, height: 100, width: 500, title: 'INPUT ERROR'});
@@ -363,7 +319,8 @@ function findSol(inboard) {
     }
     var allcells = columns.join('');
     var cmdinfo = 'data=' + allcells;
-    sendpost(cmdinfo);
+    server = new XMLHttpRequest();
+    commonNamespace.sendpost(cmdinfo, 'sudoku.py', server, hndl_svr_resp);
 }
 
 function get3x3number(xparm, yparm) {
@@ -394,7 +351,7 @@ function not_enough_givens() {
     return false;
 }
 
-function server_sent_response() {
+function hndl_svr_resp() {
     //
     // Handle the response from the net.  Fill in the
     // grid if a solution is returned.
@@ -407,7 +364,7 @@ function server_sent_response() {
         for (var i=0; i<SUDOKU_SIZE; i++) {
             for (var j=0; j<SUDOKU_SIZE; j++) {
                 if (board[i][j] === ' ') {
-                    setText(BLUE, i, j, answer[indx]);
+                    commonNamespace.setText(BLUE, i, j, answer[indx]);
                 }
                 if (answer[indx] == ' ') {
                     complain = true;
@@ -422,19 +379,6 @@ function server_sent_response() {
     }
 }
 
-function sendpost(postdata) {
-    //
-    // Handle the sending of a request across the net
-    //
-    server = new XMLHttpRequest();
-    server.onreadystatechange = server_sent_response;
-    server.open("POST", "sudoku.py", 1);
-    server.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    server.setRequestHeader("Content-length", postdata.length);
-    server.setRequestHeader("Connection", "close");
-    server.send(postdata);
-}
-
 //
 // Returns for SudokuNamespace wrapper
 //
@@ -443,12 +387,13 @@ function sendpost(postdata) {
         solver:solver,
         cleanBoard:cleanBoard,
         cleanOther:cleanOther,
-        help:help
+        help:help,
+        hndl_svr_resp:hndl_svr_resp
     };
 }();
 
 
-// Jquery code to handle HELP button (probably should be moved)
+// Jquery code to handle HELP button
 $(document).ready(function(){
     $("#helpbutton").click(function(){
         $("#helpme").toggle();
