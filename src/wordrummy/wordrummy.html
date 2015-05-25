@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<!-- Copyright (C) 2015  Warren Usui (warrenusui@eartlink.net)
+     Licensed under the GPL 3 license. -->
+<head>
+    <link rel="stylesheet" type="text/css" href="wordrummy.css">
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel='stylesheet' />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="../common.js"></script>
+    <script src="wordrummy.js"></script>
+</head>
+<body onload="wordrummyNamespace.wordrummy();">
+    <div class="buttonblk">
+        <h1>WORD RUMMY SOLVER</h1>
+        <br>
+        <div>
+            <a href="https://books.google.com/books?id=Qb5sMSMhUtoC&pg=PA171&lpg=PA171&dq=word+rummy+games+magazine&source=bl&ots=9EqywCmy1G&sig=2f0r7H-hN7ihwUSSKcnNLH_Zlh4&hl=en&sa=X&ei=InBFVYeHEMbvoASV2oCADg&ved=0CB4Q6AEwAA#v=onepage&q=word%20rummy%20games%20magazine&f=false">
+                <h3>Click here for an explanation</h3>
+            </a>
+        </div>
+
+        <br>
+        <canvas id="mycanvas" width="700" height="340" style="border:1px solid"></canvas>
+        <br>
+        <button onclick="wordrummyNamespace.solver()" id="solvebutton">SOLVE</button>
+        <br>
+    </div>
+    <div class="buttonblk" id="answer"></div>
+
+</body>
+</html>

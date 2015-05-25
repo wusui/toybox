@@ -1,0 +1,51 @@
+/**********************************************************************
+    Copyright (C) 2015  Warren Usui (warrenusui@eartlink.net)
+    Licensed under the GPL 3 license.
+ **********************************************************************/
+body {
+    background: #ffc0ff;
+    text-align: center;
+}
+
+canvas {
+    background: #fff;
+    margin: 10px;
+}
+
+table {
+    float: left;
+    margin: 20px 20px;
+}
+
+td {
+    font-family: Arial;
+    background: white;
+}
+
+#content1 {
+  width: 260px ;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+#content2 {
+  width: 560px ;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+#content3 {
+  width: 840px ;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+.buttonblk{
+    text-align: center;
+}
+
+.button {
+    position: absolute;
+    top: 50%
+}
+
