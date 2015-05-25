@@ -17,10 +17,6 @@ sudokuNamespace = function() {
  * Global variables (SudokuNamespace-wide variables):
  *   canvas -- canvas declared in HTML
  *   context -- 2d context derived from canvasname
- *   board -- user's representation of the sudoku board. A 9x9 array
- *            of blanks and digits.
- *   lastx -- x-coordinate of the last key-click
- *   lasty -- y-coordinate of the last key-click
  *   size_edge -- pixel size of edge
  *   size_cell -- pixel size of cell
  *   server -- http server variable used for POST
@@ -41,15 +37,13 @@ var BLUE = '#0000FF';           // Square found by solver
 var ONE_CHAR = 49;              // Keycode for '1'
 var NINE_CHAR = 57;             // Keycode for '9'
 var BLANK_CHAR = 32;            // Keycode for ' '
+var EDGE_SIZE = 10;             // Border around grid.
 
 //
 // Values that will be modified.
 //
 var canvas;
 var context;
-var board = [];
-var lastx = SUDOKU_SIZE;
-var lasty = SUDOKU_SIZE;
 var size_edge;
 var size_cell;
 var server;
@@ -75,12 +69,12 @@ function sudoku(){
     canvas = document.getElementById('mycanvas');
     canvas.setAttribute("tabindex", 0);
     context = canvas.getContext('2d');
-    commonNamespace.init(context, canvas, SUDOKU_SIZE, SUDOKU_SIZE);
+    commonNamespace.init(context, canvas, SUDOKU_SIZE, SUDOKU_SIZE, EDGE_SIZE);
     dims = commonNamespace.getSizes();
     size_edge = dims[0];
     size_cell = dims[1];
     drawBoard();
-    cleanBoard();
+    commonNamespace.cleanBoard(SUDOKU_SIZE, SUDOKU_SIZE);
     canvas.addEventListener("mousedown", getPosition, false);
     canvas.addEventListener("keydown", doKeyDown, false);
 }
@@ -100,34 +94,25 @@ function solver() {
             {modal: true, height: 100, width: 320, title: 'INPUT ERROR'});
         return;
     }
-    findSol(board);
+    findSol(commonNamespace.allBoard());
 }
 
 function cleanBoard() {
     //
     // Remove all entries from the display and from the local board
     //
-    board = [];
-    for (var i = 0; i < SUDOKU_SIZE; i++) {
-        board[i] = [];
-        for (var j = 0; j < SUDOKU_SIZE; j++) {
-            board[i].push(' ');
-            commonNamespace.colorSquare(WHITE_BG, i, j);
-        }
-    }
+    commonNamespace.cleanBoard(SUDOKU_SIZE, SUDOKU_SIZE);
 }
 
 function cleanOther() {
     //
     // Clear the board of all computer generated data
     //
-    if (lastx < SUDOKU_SIZE  && lastx >= 0 && lasty < SUDOKU_SIZE && lasty >= 0) {
-        setNumbers(board[lastx][lasty], WHITE_BG);
-    }
+    commonNamespace.clearSquare(SUDOKU_SIZE, SUDOKU_SIZE);
     for (var i = 0; i < SUDOKU_SIZE; i++) {
         for (var j = 0; j < SUDOKU_SIZE; j++) {
             commonNamespace.colorSquare(WHITE_BG, i, j);
-            commonNamespace.setText(BLACK_FG, i, j, board[i][j]);
+            commonNamespace.setText(BLACK_FG, i, j, commonNamespace.getBoard(i, j));
         }
     }
 }
@@ -163,16 +148,13 @@ function getPosition(event) {
     //     Un-highlight the previous location.
     //     Highlight the new location.
     //
-    coords = commonNamespace.getDispPos()
+    coords = commonNamespace.getDispPos();
     if (coords[0] >= SUDOKU_SIZE  || coords[0] < 0 || coords[1] >= SUDOKU_SIZE || coords[1] < 0) {
         return;
     }
-    if (lastx < SUDOKU_SIZE  && lastx >= 0 && lasty < SUDOKU_SIZE && lasty >= 0) {
-        setNumbers(board[lastx][lasty], WHITE_BG);
-    }
-    lastx = coords[0];
-    lasty = coords[1];
-    setNumbers(board[lastx][lasty], YELLOW);
+    commonNamespace.clearSquare(SUDOKU_SIZE, SUDOKU_SIZE);
+    commonNamespace.setLast(coords[0], coords[1]);
+    commonNamespace.setValue(commonNamespace.getBoard(coords[0], coords[1]), YELLOW);
 }
 
 function doKeyDown(event) {
@@ -180,7 +162,7 @@ function doKeyDown(event) {
     // Handle keyboard input, skipping invalid keys.
     // Add new character to grid.
     //
-    if (lastx < 0 || lastx >= SUDOKU_SIZE || lasty < 0 || lasty >= SUDOKU_SIZE) {
+    if (commonNamespace.outaBounds(SUDOKU_SIZE, SUDOKU_SIZE)) {
         return;
     }
     if (event.keyCode < ONE_CHAR || event.keyCode > NINE_CHAR) {
@@ -189,7 +171,7 @@ function doKeyDown(event) {
         }
     }
     var charv = String.fromCharCode(event.keyCode);
-    setNumbers(charv, YELLOW);
+    commonNamespace.setValue(charv, YELLOW);
 }
 //
 
@@ -221,16 +203,6 @@ function drawBoard(){
 }
 
 
-function setNumbers(charv1, color) {
-    //
-    // Set the character in charv1 as a square value, after
-    // setting the square's color to the color parameter.
-    //
-    commonNamespace.colorSquare(color, lastx, lasty);
-    commonNamespace.setText(BLACK_FG, lastx, lasty, charv1);
-    board[lastx][lasty] = charv1;
-}
-
 /**********************************************************************
  *
  * Solver Functions
@@ -257,7 +229,7 @@ function validate() {
     var loc_array = {};
     for (var i=0; i < SUDOKU_SIZE; i++) {
         for (var j=0; j < SUDOKU_SIZE; j++) {
-            chr = board[i][j];
+            chr = commonNamespace.getBoard(i, j);
             if (chr != ' ') {
                 sqloc = get3x3number(i, j);
                 if (loc_array[chr] === undefined) {
@@ -299,7 +271,7 @@ function validate() {
             var tmp_x = bad_ones[i2][0];
             var tmp_y = bad_ones[i2][1];
             commonNamespace.colorSquare(LIGHTRED, tmp_x, tmp_y);
-            commonNamespace.setText(BLACK_FG, tmp_x, tmp_y, board[tmp_x][tmp_y]);
+            commonNamespace.setText(BLACK_FG, tmp_x, tmp_y, commonNamespace.getBoard(tmp_x, tmp_y));
         }
         $("<div>Input is invalid.  Check the squares marked in red</div>").dialog(
             {modal: true, height: 100, width: 500, title: 'INPUT ERROR'});
@@ -340,7 +312,7 @@ function not_enough_givens() {
     var givens = 0;
     for (var i=0; i<SUDOKU_SIZE; i++) {
         for (var j=0; j<SUDOKU_SIZE; j++) {
-            if (board[i][j] !== ' ') {
+            if (commonNamespace.getBoard(i, j) !== ' ') {
                 givens++;
             }
         }
@@ -363,7 +335,7 @@ function hndl_svr_resp() {
         var complain = false;
         for (var i=0; i<SUDOKU_SIZE; i++) {
             for (var j=0; j<SUDOKU_SIZE; j++) {
-                if (board[i][j] === ' ') {
+                if (commonNamespace.getBoard(i, j)  === ' ') {
                     commonNamespace.setText(BLUE, i, j, answer[indx]);
                 }
                 if (answer[indx] == ' ') {
