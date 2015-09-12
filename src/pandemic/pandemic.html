@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<!-- Copyright (C) 2015  Warren Usui (warrenusui@eartlink.net)
+     Licensed under the GPL 3 license. -->
+<head>
+    <link rel="stylesheet" type="text/css" href="pandemic.css">
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel='stylesheet' />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+</head>
+<body>
+    <div class="centerblk">
+        <h1>PANDEMIC</h1>
+        <br>
+        <div>
+            <a href="http://zmangames.com/rulebooks/Pandemic.pdf">
+                <h3>Click here for a copy of the rules</h3>
+            </a>
+        </div>
+        <p>
+Pandemic is a cooperative game designed by
+<a href="http://www.leacock.com/"> Matt Leacock<a>
+for <a href="http://zmangames.com/home.php">Zman games</a>.
+This page is a solitaire implementation
+that contains a crude map which logically matches the map
+used in the actual game.  For a more aesthetically pleasing and multiplayer
+ version of this game, try
+<a href="http://www.brettspielwelt.com">the Brettspielwelt website.</a>
+Click <a href="help.html" target="_blank">here</a> for a page of instructions on how to play this version.
+        </p>
+        <br>
+    </div>
+<p>
+    <div class="centerblk">
+    <h1>SETUP</h1>
+    <h3>Number of players</h3>
+    <form>
+    <input type="radio" name="plyrnumb" value="2">Two
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="radio" name="plyrnumb" value="3">Three
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="radio" name="plyrnumb" value="4" checked>Four
+    </form>
+    <h3>Number of epidemics</h3>
+    <form>
+    <input type="radio" name="epidnumb" value="4" checked>Four
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="radio" name="epidnumb" value="5">Five
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="radio" name="epidnumb" value="6">Six
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="radio" name="epidnumb" value="7">Seven
+    </form>
+    <h3>Roles</h3>
+    <form>
+    <input type="checkbox" name="role" value="O" checked>Operations Expert
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="role" value="S" checked>Scientist
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="role" value="D" checked>Dispatcher
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="role" value="M" checked>Medic
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="role" value="R" checked>Researcher
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="role" value="Q">Quarantine Specialist
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="role" value="C">Contingency Planner
+    </form>
+    <h3>Display Options</h3>
+    <form>
+    <input type="checkbox" name="display" value="P">Play by play
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="display" value="H" checked>Helpful
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="display" value="C">Careful
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    </form>
+    <br>
+    <button onclick="localNamespace.link()">PLAY GAME</button>
+    </div>
+</p>
+<script>
+localNamespace = function() {
+function readradio(element) {
+    var radios = document.getElementsByName(element);
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            return i;
+        }
+    }
+    return -1;
+}
+function link() {
+    var plyrs = readradio('plyrnumb');
+    plyrs += 2;
+    var epid = readradio('epidnumb');
+    epid += 4;
+    var oroles = '';
+    var roles = document.getElementsByName('role');
+    for (var i = 0; i < roles.length; i++) {
+        if (roles[i].checked) {
+            oroles = oroles.concat(roles[i].value);
+        }
+    }
+    if (oroles.length < plyrs) {
+        $("<div>Number of roles must be greater than or equal to the number of players.</div>").dialog(
+            {modal: true, height: 140, width: 400, title: 'ERROR'});
+        return;
+    }
+    var odisp = '';
+    var disp = document.getElementsByName('display');
+    for (var j = 0; j < disp.length; j++) {
+        if (disp[j].checked) {
+            odisp = odisp.concat(disp[j].value);
+        }
+    }
+    gamev = "game.html".concat("?plyrs=", plyrs, "?epid=", epid, "?roles=", oroles, "?display=", odisp);
+    window.open(gamev);
+}
+    return {
+        link:link
+    };
+}();
+</script>
+</body>
+</html>
