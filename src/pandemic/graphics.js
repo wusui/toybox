@@ -158,7 +158,7 @@ function score_pop(ginfo, germ, count) {
     var part3 = '</div>';
     var stat = STATES[ginfo.states['disease_status'][germ]];
     var numbr = count.toString();
-    return retv + DCOLORS[germ] + part2 + DCOLORS[germ] + '/' + stat + ': ' + nu mbr + part3;
+    return retv + DCOLORS[germ] + part2 + DCOLORS[germ] + '/' + stat + ': ' + numbr + part3;
 }
 
 var VERT_OFF_PLAYR = 56;
