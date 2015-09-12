@@ -9,3 +9,4 @@ Stuff I'm playing with.
 
 * Llsimilarity Page
 
+* Pandemic game
