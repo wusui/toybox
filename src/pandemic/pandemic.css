@@ -1,0 +1,59 @@
+/**********************************************************************
+     Copyright (C) 2015  Warren Usui (warrenusui@eartlink.net)
+     Licensed under the GPL 3 license.
+ **********************************************************************/
+body {
+    background: #ddddff;
+}
+
+.clear { clear:both; }
+
+.container {
+    position: relative;
+    width: 1200px;
+}
+.container .outer1 {
+    position: relative;
+    width: 83%;
+    float: left;
+}
+.container .outer2 {
+    position: relative;
+    width: 16%;
+    float: right;
+    font: 15px arial, sans-serif;
+}
+
+#myMap {
+    background: #ffffff;
+    margin: 5px;
+}
+
+#cardDex {
+    margin: 5px;
+}
+
+.centerblk {
+    text-align: center;
+}
+
+div.xBLUE {
+    color: #0000ff;
+    font-weight: bold;
+}
+
+div.xBLACK {
+    color: #000000;
+    font-weight: bold;
+}
+
+div.xYELLOW {
+    color: #C08000;
+    font-weight: bold;
+}
+
+div.xRED {
+    color: #ff0000;
+    font-weight: bold;
+}
+
