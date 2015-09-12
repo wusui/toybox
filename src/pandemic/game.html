@@ -1,0 +1,112 @@
+<html>
+<!-- Copyright (C) 2015  Warren Usui (warrenusui@eartlink.net)
+     Licensed under the GPL 3 license. -->
+<head>
+    <link rel="stylesheet" type="text/css" href="pandemic.css" media="screen">
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel='stylesheet' />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="gameobjs.js"></script>
+    <script src="graphics.js"></script>
+    <script src="buttons.js"></script>
+    <script src="help.js"></script>
+    <script src="actions.js"></script>
+</head>
+<body onload="gameobjsNamespace.initialize();">
+  <div class="container">
+    <div class="outer1">
+        <br>
+        <canvas id="myMap" width="990px" height="450px" style="border:1px solid"></canvas>
+    </div>
+    <div class="outer2">
+    <br>
+    <p><B>Display Options</B></p>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" id="playbyplay">Play by play
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" id="helpful">Helpful
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" id="careful">Careful
+    <br>
+    <p><B>Special Moves</B></p>
+    <button id="buildb" onclick="buttonsNamespace.build()">BUILD</button>
+    &nbsp;&nbsp;&nbsp;
+    <button id="healb" onclick="buttonsNamespace.heal()">HEAL</button>
+    <br>
+    <br>
+    <button id="cureb" onclick="buttonsNamespace.cure()">CURE</button>
+    &nbsp;&nbsp;&nbsp;
+    <button id="skip" onclick="gameobjsNamespace.skip()">SKIP</button>
+    <br>
+    <br>
+    <button id="restart" onclick="helpNamespace.restart()">RESTART</button>
+    &nbsp;&nbsp;&nbsp;
+    <button onclick="helpNamespace.help()">HELP</button>
+    <br>
+    <br>
+    <p><B>Statistics</B></p>
+    <p id="stats"></p>
+    </div>
+    <div class="outer1">
+        <br>
+        <canvas id="cardDex" width="990px" height="210px"></canvas>
+        <br>
+    </div>
+  </div>
+  <div id="pbpmessage" style="display:none">PLAY BY PLAY MSG GOES HERE</div>
+  <div id="helpmessage" style="display:none">HELP MESSAGE GOES HERE</div>
+  <div id="dialogcareful" style="display:none">CAREFUL MESSAGE GOES HERE</div>
+  <div id="worldmap" style="display:none">
+Atlanta:Miami,Washington,Chicago:1,2+
+Washington:Atlanta,Miami,Toronto,New York:2,1+
+San Francisco:Los Angeles,Tokyo,Manila,Chicago:0,1+
+Chicago:San Francisco,Los Angeles,Atlanta,Toronto,Mexico City:1,1+
+Toronto:Chicago,New York,Washington:1,0+
+New York:Toronto,Washington,Madrid,London:2,0+
+London:New York,Madrid,Paris,Essen:3,0+
+Madrid:London,New York,Paris,Algiers,Sao Paulo:3,1+
+Paris:London,Madrid,Algiers,Essen,Milan:4,1+
+Essen:St. Petersburg,London,Paris,Milan:4,0+
+Milan:Paris,Essen,Istambul:5,1+
+St. Petersburg:Essen,Istambul,Moscow:6,0+
+Algiers:Paris,Madrid,Istambul,Cairo:3,2+
+Istambul:Algiers,Cairo,Milan,St. Petersburg,Moscow,Baghdad:6,1+
+Moscow:Tehran,Istambul,St. Petersburg:7,0+
+Cairo:Khartoum,Riyadh,Algiers,Istambul,Baghdad:4,2+
+Baghdad:Istambul,Cairo,Riyadh,Tehran,Karachi:5,3+
+Tehran:Moscow,Karachi,Baghdad,Delhi:6,2+
+Riyadh:Cairo,Baghdad,Karachi:5,4+
+Karachi:Tehran,Riyadh,Baghdad,Delhi,Mumbai:6,3+
+Delhi:Tehran,Karachi,Mumbai,Chennai,Kolkata:7,3+
+Mumbai:Karachi,Chennai,Delhi:6,4+
+Chennai:Mumbai,Delhi,Kolkata,Bangkok,Jakarta:8,4+
+Kolkata:Delhi,Chennai,Bangkok,Hong Kong:7,2+
+Los Angeles:Sydney,San Francisco,Chicago,Mexico City:0,2+
+Mexico City:Los Angeles,Miami,Chicago,Bogota,Lima:0,3+
+Miami:Atlanta,Washington,Bogota,Mexico City:2,2+
+Lima:Mexico City,Bogota,Santiago:0,4+
+Santiago:Lima:1,4+
+Bogota:Miami,Mexico City,Lima,Buenos Aires,Sao Paulo:1,3+
+Sao Paulo:Buenos Aires,Lagos,Bogota,Madrid:2,3+
+Buenos Aires:Sao Paulo,Bogota:2,4+
+Lagos:Sao Paulo,Khartoum,Kinshasa:3,3+
+Kinshasa:Lagos,Khartoum,Johannesburg:3,4+
+Johannesburg:Kinshasa,Khartoum:4,4+
+Khartoum:Kinshasa,Johannesburg,Lagos,Cairo:4,3+
+Sydney:Los Angeles,Jakarta,Manila:10,4+
+Manila:San Francisco,Sydney,Taipei,Ho Chi Minh City,Hong Kong:10,3+
+Jakarta:Sydney,Ho Chi Minh City,Chennai,Bangkok:9,4+
+Ho Chi Minh City:Jakarta,Manila,Hong Kong,Bangkok:9,3+
+Bangkok:Jakarta,Ho Chi Minh City,Hong Kong,Kolkata,Chennai:8,3+
+Hong Kong:Taipei,Manila,Shanghai,Ho Chi Minh City,Bangkok,Kolkata:8,2+
+Taipei:Shanghai,Hong Kong,Manila,Osaka:9,2+
+Osaka:Taipei,Tokyo:10,2+
+Tokyo:San Francisco,Osaka,Seoul,Shanghai:10,1+
+Shanghai:Beijing,Seoul,Tokyo,Hong Kong,Taipei:9,1+
+Beijing:Shanghai,Seoul:9,0+
+Seoul:Beijing,Shanghai,Tokyo:10,0
+  </div>
+</body>
+</html>
