@@ -9,6 +9,7 @@ var worldMap;
 var cityNameInfo;
 var ginfo;
 var pmoves;
+var w4pbp;
 
 function process_map() {
     cityNameInfo = {};
@@ -138,8 +139,17 @@ function get_city(number) {
     return worldMap[number][1];
 }
 
+function get_pbpw() {
+    return w4pbp;
+}
+
+function set_pbpw(tfval) {
+    w4pbp = tfval;
+}
+
 function initialize() {
     var wrld_map = process_map();
+    w4pbp = false;
     graphNamespace.initialize(wrld_map);
     graphNamespace.draw_map();
     pmoves = 4;
@@ -179,12 +189,25 @@ function mkInts(charv) {
     return retv;
 }
 
+function dump_card(ply_no, card) {
+    var hand = ginfo.players[ply_no]["cards"];
+    for (var i=0; i < hand.length; i++) {
+        if (hand[i] == card) {
+            hand.splice(i,1);
+            break;
+        }
+    }
+}
+
     return {
         initialize:initialize,
         get_game_info:get_game_info,
         gpmoves:gpmoves,
         get_city:get_city,
         shuffle:shuffle,
+        dump_card:dump_card,
+        get_pbpw:get_pbpw,
+        set_pbpw:set_pbpw,
         skip:skip
     };
 }();
