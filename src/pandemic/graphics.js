@@ -35,14 +35,18 @@ function draw_map() {
     }
 }
 
+function get_role_text(indx) {
+    return ROLE_TXT[indx];
+}
+
 var CITY_MAX = 48;
 function draw_game_info() {
-    ginfo = gameobjsNamespace.get_game_info();
+    var ginfo = gameobjsNamespace.get_game_info();
     context2.font="bold 18px Arial";
     var plist = [];
     var plen = [];
     for (var i=0; i < ginfo.players.length; i++) {
-        plist[i] = ROLE_TXT[ginfo.players[i].role];
+        plist[i] = get_role_text(ginfo.players[i].role);
         plen[i] = context2.measureText(plist[i]).width;
     }
     var dcards = [];
@@ -244,7 +248,7 @@ var CANV_SPLIT = 460;
 var C_XOFF = 40;
 var C_YOFF = 60;
 function evntHandler(event) {
-    ginfo = gameobjsNamespace.get_game_info();
+    var ginfo = gameobjsNamespace.get_game_info();
     var x = event.clientX - C_XOFF;
     var y = event.clientY - C_YOFF;
     if (y > CANV_SPLIT) {
@@ -271,12 +275,27 @@ function evntHandler(event) {
             }
         }
     }
+    // TO DO: erase station code here.
+    var stval = helpNamespace.get_state();
+    if (stval == 1) {
+        for (var ii=0; ii < ginfo.states['research_stations'].length; ii++) {
+            if (ginfo.states['research_stations'][ii] == whereto) {
+                ginfo.states['research_stations'].splice(ii, 1);
+                helpNamespace.set_state(0);
+                actionNamespace.build_it();
+                // graphNamespace.redraw();
+                break;
+            }
+        }
+        return;
+    }
     var plb = ginfo.states['turn'];
     var spt = ginfo.players[plb]['location'];
     for (i=0; i < worldMap[spt][2].length; i++) {
         if (worldMap[spt][2][i] == whereto) {
             //gameobjsNamespace.make_move(plb, whereto);
             actionNamespace.doAction('move', [plb,whereto]);
+            break;
         }
     }
 }
@@ -387,6 +406,7 @@ function get_max_cities() {
         get_max_cities:get_max_cities,
         draw_map:draw_map,
         draw_game_info:draw_game_info,
+        get_role_text:get_role_text,
         redraw:redraw
     };
 }();

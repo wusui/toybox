@@ -56,14 +56,29 @@ function Build() {
     this.verb = 'Build';
 }
 
+var MAX_STATIONS = 6;
 function buildaction(parms) {
+    loc_pnumb = parms[0];
+    loc_city = parms[1];
     var lginfo = gameobjsNamespace.get_game_info();
-    alert(JSON.stringify(parms));
-    alert(JSON.stringify(lginfo['players'][parms[0]]['role']));
-    alert(JSON.stringify(lginfo['players'][parms[0]]['cards']));
-    // TO DO: if not 'O', get rid of card
-    // TO DO: if too many research stattions, put us in erase state.
-    lginfo.states['research_stations'].push(parms[1]);
+    if (lginfo.states['research_stations'].length >= MAX_STATIONS) {
+        helpNamespace.set_state(1);
+        helpNamespace.help();
+        return;
+    }
+    build_it();
+}
+
+var loc_pnumb;
+var loc_city;
+function build_it() {
+    var lginfo = gameobjsNamespace.get_game_info();
+    var pval = lginfo.players[loc_pnumb]['role'];
+    if (pval !== 'O') { 
+        gameobjsNamespace.dump_card(loc_pnumb, loc_city); 
+    }
+    lginfo.states['research_stations'].push(loc_city);
+    gameobjsNamespace.skip();
 }
 
 function builddesc(parms) {
@@ -103,6 +118,9 @@ function doAction(action, parms) {
 }
 
 function doAction2() {
+    if (document.getElementById("playbyplay").checked) {
+        gameobjsNamespace.set_pbpw(true);
+    }
     activity.action(aparms);
     if (document.getElementById("playbyplay").checked) {
         var msg = "You "+activity.pastTense().toLowerCase()+" "+text;
@@ -115,7 +133,7 @@ function doAction2() {
                 width: 400,
                 title: 'PLAY BY PLAY',
                 buttons: {
-                    "Yes": function () {
+                    "Okay": function () {
                         $(this).dialog('close');
                         wait = false;
                     }
@@ -131,7 +149,7 @@ function doAction2() {
 function pbptimer() {
     if (!wait) {
         clearInterval(pbpTimer);
-        graphNamespace.redraw();
+        gameobjsNamespace.set_pbpw(false);
     }
 }
 
@@ -177,6 +195,7 @@ function set_careful(torf) {
 
     return {
         initialize:initialize,
+        build_it:build_it,
         doAction:doAction
     };
 }();
