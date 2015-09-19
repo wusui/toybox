@@ -68,9 +68,9 @@ function strt_game() {
         var brkr = scanner[sind].split('=');
         parsur[brkr[0]] = brkr[1];
     }
-    var disply = parsur['display'];
-    var roles = parsur['roles'];
-    var noofplyrs = Number(parsur['plyrs']);
+    var disply = parsur.display;
+    var roles = parsur.roles;
+    var noofplyrs = Number(parsur.plyrs);
     rlist = [];
     for (i=0; i<roles.length; i++) {
         rlist.push(roles.substring(i,i+1));
@@ -78,7 +78,7 @@ function strt_game() {
     shuffle(rlist);
     var lplayers = [];
     for (i=0; i<noofplyrs; i++) {
-        lplayers.push({"cards": [], "role": rlist[i], "location": 0 });
+        lplayers.push({"cards": [], "role": rlist[i], "clocation": 0 });
     }
     cnt = 0;
     for (j=0; j<(6 - noofplyrs); j++) {
@@ -88,7 +88,7 @@ function strt_game() {
         }
     }
     pl_deck.splice(0,noofplyrs*(6 - noofplyrs));
-    var epids = Number(parsur['epid']);
+    var epids = Number(parsur.epid);
     var stcksize = Math.floor(pl_deck.length/epids);
     var extra = pl_deck.length % epids;
     var ssizes = [];
@@ -123,7 +123,7 @@ function strt_game() {
     }
     gdecks = {'player': play_deck, 'city': city_deck};
     ginfo = {'states': lstates, 'display': disply, 'germs': grms, 'players': lplayers};
-    helpNamespace.set_state(0);
+    helpNamespace.set_state(STATE_START_OF_TURN);
     //alert(JSON.stringify(ginfo));
 }
 
@@ -190,7 +190,7 @@ function mkInts(charv) {
 }
 
 function dump_card(ply_no, card) {
-    var hand = ginfo.players[ply_no]["cards"];
+    var hand = ginfo.players[ply_no].cards;
     for (var i=0; i < hand.length; i++) {
         if (hand[i] == card) {
             hand.splice(i,1);
