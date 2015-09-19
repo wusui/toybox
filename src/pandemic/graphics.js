@@ -11,6 +11,7 @@ var CSIZE = 40;
 var COFFSZ = (SQUARESZ-CSIZE)/2;
 var MIDSQ = SQUARESZ/2;
 var HCSIZE = CSIZE/2;
+var colors = ["#0000ff", "#000000", "#C08000", "#ff0000", '#00ff00'];
 
 var ROLE_TXT = {'O': 'OPERATIONS EXPERT', 'R': 'RESEARCHER', 'M': 'MEDIC',
                 'D': 'DISPATCHER', 'S': 'SCIENTIST',
@@ -23,8 +24,6 @@ var context;
 var context2;
 var context3;
 var worldMap;
-
-var colors = ["#0000ff", "#000000", "#C08000", "#ff0000", '#00ff00'];
 
 function draw_map() {
     for (var i=0; i < worldMap.length; i++) {
@@ -57,7 +56,7 @@ function draw_game_info() {
     }
     context3.font="bold 15px Arial";
     for (i=0; i < ginfo.players.length; i++) {
-        var cards = ginfo.players[i]['cards'];
+        var cards = ginfo.players[i].cards;
         cards.sort(function(a, b){return a-b;});
         for (var j=0; j < cards.length; j++) {
             var ctxt3f;
@@ -131,24 +130,24 @@ function scoreboard(ginfo) {
         retv += score_pop(ginfo, i, DCOUNT-dvector[i]);
     }
     retv += '<BR><div class="xBLACK">OUTBREAKS: ';
-    retv += ginfo.states['outbreak_count'].toString();
+    retv += ginfo.states.outbreak_count.toString();
     retv += '</div>';
     retv += '<div class="xBLACK">INFECTION RATE: ';
-    retv += ginfo.states['infection_rate'].toString();
+    retv += ginfo.states.infection_rate.toString();
     retv += '(';
-    retv += ginfo.states['infection_count'].toString();
+    retv += ginfo.states.infection_count.toString();
     retv += ')</div>';
     retv += '<div class="xBLACK">CARDS LEFT: ';
-    retv += ginfo.states['cards_left'].toString();
+    retv += ginfo.states.cards_left.toString();
     retv += '</div>';
     retv += '<div class="xBLACK">RESEARCH STATIONS: ';
-    retv += ginfo.states['research_stations'].length.toString();
+    retv += ginfo.states.research_stations.length.toString();
     retv += '</div>';
     retv += '<BR><div class="xBLACK">ACTIONS LEFT: ';
     retv += gameobjsNamespace.gpmoves().toString();
     retv += '</div>';
     retv += '<div class="xBLACK">PLAYER: #';
-    var plm = ginfo.states['turn'] + 1;
+    var plm = ginfo.states.turn + 1;
     retv += plm.toString();
     retv += '</div>';
     return retv;
@@ -160,7 +159,7 @@ function score_pop(ginfo, germ, count) {
     var retv = '<div class="x';
     var part2 = '">';
     var part3 = '</div>';
-    var stat = STATES[ginfo.states['disease_status'][germ]];
+    var stat = STATES[ginfo.states.disease_status[germ]];
     var numbr = count.toString();
     return retv + DCOLORS[germ] + part2 + DCOLORS[germ] + '/' + stat + ': ' + numbr + part3;
 }
@@ -173,7 +172,7 @@ function show_players(ginfo) {
     context.fillStyle = "#000000";
     for (var i=0; i < leng; i++) {
         var txt = ginfo.players[i].role;
-        var pt = worldMap[ginfo.players[i].location][3];
+        var pt = worldMap[ginfo.players[i].clocation][3];
         var x = pt[0] * SQUARESZ + COFFSZ + PL_XOFF[leng][i];
         var y = pt[1] * SQUARESZ + COFFSZ + VERT_OFF_PLAYR;
         context.fillText(txt,x,y);
@@ -189,7 +188,7 @@ function show_cards(ginfo, plist, colhead, dcnum, dcards) {
     for (var i=0; i < ginfo.players.length; i++) {
         context2.fillStyle = "#000000";
         context2.font="normal 15px Arial";
-        if (i == ginfo.states['turn']) {
+	if (i == ginfo.states.turn) {
             context2.font="bold 18px Arial";
         }
         context2.fillText(plist[i],colhead[i],VERT_ROLE_LOC);
@@ -204,8 +203,8 @@ function show_cards(ginfo, plist, colhead, dcnum, dcards) {
 }
 
 function mark_research(ginfo) {
-    for (var i=0; i < ginfo.states['research_stations'].length; i++) {
-        var tindx = ginfo.states['research_stations'][i];
+    for (var i=0; i < ginfo.states.research_stations.length; i++) {
+        var tindx = ginfo.states.research_stations[i];
         var pt = worldMap[tindx][3];
         var x = pt[0] * SQUARESZ + COFFSZ + 1;
         var y = pt[1] * SQUARESZ + COFFSZ + 1;
@@ -275,13 +274,12 @@ function evntHandler(event) {
             }
         }
     }
-    // TO DO: erase station code here.
     var stval = helpNamespace.get_state();
     if (stval == 1) {
-        for (var ii=0; ii < ginfo.states['research_stations'].length; ii++) {
-            if (ginfo.states['research_stations'][ii] == whereto) {
-                ginfo.states['research_stations'].splice(ii, 1);
-                helpNamespace.set_state(0);
+        for (var ii=0; ii < ginfo.states.research_stations.length; ii++) {
+            if (ginfo.states.research_stations[ii] == whereto) {
+                ginfo.states.research_stations.splice(ii, 1);
+                helpNamespace.set_state(STATE_START_OF_TURN);
                 actionNamespace.build_it();
                 // graphNamespace.redraw();
                 break;
@@ -289,8 +287,8 @@ function evntHandler(event) {
         }
         return;
     }
-    var plb = ginfo.states['turn'];
-    var spt = ginfo.players[plb]['location'];
+    var plb = ginfo.states.turn;
+    var spt = ginfo.players[plb].clocation;
     for (i=0; i < worldMap[spt][2].length; i++) {
         if (worldMap[spt][2][i] == whereto) {
             //gameobjsNamespace.make_move(plb, whereto);

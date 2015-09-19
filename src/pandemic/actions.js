@@ -38,14 +38,14 @@ function moveaction(parms) {
     plb = parms[0];
     whereto = parms[1];
     var lginfo = gameobjsNamespace.get_game_info();
-    lginfo.players[plb]['location'] = whereto;
+    lginfo.players[plb].clocation = whereto;
     gameobjsNamespace.skip();
 }
 
 function movedesc(parms) {
     var desc = ' from ';
     var lginfo = gameobjsNamespace.get_game_info();
-    var cnumb = lginfo.players[parms[0]]['location'];
+    var cnumb = lginfo.players[parms[0]].clocation;
     desc += gameobjsNamespace.get_city(cnumb);
     desc += ' to ';
     desc += gameobjsNamespace.get_city(parms[1]);
@@ -61,8 +61,8 @@ function buildaction(parms) {
     loc_pnumb = parms[0];
     loc_city = parms[1];
     var lginfo = gameobjsNamespace.get_game_info();
-    if (lginfo.states['research_stations'].length >= MAX_STATIONS) {
-        helpNamespace.set_state(1);
+    if (lginfo.states.research_stations.length >= MAX_STATIONS) {
+        helpNamespace.set_state(STATE_MUST_MOVE_RS);
         helpNamespace.help();
         return;
     }
@@ -73,11 +73,11 @@ var loc_pnumb;
 var loc_city;
 function build_it() {
     var lginfo = gameobjsNamespace.get_game_info();
-    var pval = lginfo.players[loc_pnumb]['role'];
+    var pval = lginfo.players[loc_pnumb].role;
     if (pval !== 'O') { 
         gameobjsNamespace.dump_card(loc_pnumb, loc_city); 
     }
-    lginfo.states['research_stations'].push(loc_city);
+    lginfo.states.research_stations.push(loc_city);
     gameobjsNamespace.skip();
 }
 
@@ -87,25 +87,25 @@ function builddesc(parms) {
     return desc;
 }
 
+function make_proto(main_obj, action_rtn, descript_rtn) {
+    main_obj.prototype = new Action();
+    main_obj.prototype.action = action_rtn;
+    main_obj.prototype.descript = descript_rtn;
+}
+
 function initialize() {
-    Move.prototype = new Action();
-    Move.prototype.constructor = Move;
-    Move.prototype.action = moveaction;
-    Move.prototype.descript = movedesc;
-    Build.prototype = new Action();
-    Build.prototype.constructor = Build;
-    Build.prototype.action = buildaction;
-    Build.prototype.descript = builddesc;
+    make_proto(Move, moveaction, movedesc);
+    make_proto(Build, buildaction, builddesc);
     Build.prototype.pastTense = function() { return 'built'; };
     operations = {};
-    operations['move'] = new Move();
-    operations['build'] = new Build();
+    operations.move = new Move();
+    operations.build = new Build();
 }
 
 function doAction(action, parms) {
     activity = operations[action];
     aparms = parms;
-    helpNamespace.set_state(0);
+    helpNamespace.set_state(STATE_START_OF_TURN);
     wait = false;
     text = activity.descript(parms);
     if (document.getElementById("careful").checked) {
