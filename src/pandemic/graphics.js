@@ -275,7 +275,7 @@ function evntHandler(event) {
         }
     }
     var stval = helpNamespace.get_state();
-    if (stval == 1) {
+    if (stval == STATE_MUST_MOVE_RS) {
         for (var ii=0; ii < ginfo.states.research_stations.length; ii++) {
             if (ginfo.states.research_stations[ii] == whereto) {
                 ginfo.states.research_stations.splice(ii, 1);
