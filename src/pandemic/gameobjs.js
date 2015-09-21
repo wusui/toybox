@@ -125,6 +125,8 @@ function strt_game() {
     ginfo = {'states': lstates, 'display': disply, 'germs': grms, 'players': lplayers};
     helpNamespace.set_state(STATE_START_OF_TURN);
     //alert(JSON.stringify(ginfo));
+    injectorNamespace.set_starter('O');
+    injectorNamespace.extra_stations([5,13,17,28,38,40,])
 }
 
 function get_game_info() {
