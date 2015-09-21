@@ -87,6 +87,22 @@ function builddesc(parms) {
     return desc;
 }
 
+function build_remove(whereto) {
+    var ginfo = gameobjsNamespace.get_game_info();
+    for (var ii=0; ii < ginfo.states.research_stations.length; ii++) {
+        if (ginfo.states.research_stations[ii] == whereto) {
+            ginfo.states.research_stations.splice(ii, 1);
+            helpNamespace.set_state(STATE_START_OF_TURN);
+            actionNamespace.build_it();
+            gameobjsNamespace.set_pbpw(true);
+            text += "<BR><BR>Research station removed from ";
+            text += gameobjsNamespace.get_city(whereto);
+            show_pbp();
+            break;
+        }
+    }
+}
+
 function make_proto(main_obj, action_rtn, descript_rtn) {
     main_obj.prototype = new Action();
     main_obj.prototype.action = action_rtn;
@@ -122,6 +138,13 @@ function doAction2() {
         gameobjsNamespace.set_pbpw(true);
     }
     activity.action(aparms);
+    if (helpNamespace.get_state() !== STATE_START_OF_TURN) {
+        return;
+    }
+    show_pbp();
+}
+
+function show_pbp() {
     if (document.getElementById("playbyplay").checked) {
         var msg = "You "+activity.pastTense().toLowerCase()+" "+text;
         document.getElementById("pbpmessage").innerHTML = msg;
@@ -129,7 +152,7 @@ function doAction2() {
         $(function(){
             $("#pbpmessage").dialog({
                 modal: true,
-                height: 200,
+                height: 300,
                 width: 400,
                 title: 'PLAY BY PLAY',
                 buttons: {
@@ -196,6 +219,7 @@ function set_careful(torf) {
     return {
         initialize:initialize,
         build_it:build_it,
+        build_remove:build_remove,
         doAction:doAction
     };
 }();

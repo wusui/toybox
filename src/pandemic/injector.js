@@ -6,7 +6,6 @@ injectorNamespace = function() {
 
 function set_starter(person) {
     lginfo = gameobjsNamespace.get_game_info();
-    alert(person);
     alert(JSON.stringify(lginfo));
     for (var i=1; i<lginfo.players.length; i++) {
         if (lginfo.players[i].role == person) {

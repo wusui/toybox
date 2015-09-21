@@ -274,17 +274,8 @@ function evntHandler(event) {
             }
         }
     }
-    var stval = helpNamespace.get_state();
-    if (stval == STATE_MUST_MOVE_RS) {
-        for (var ii=0; ii < ginfo.states.research_stations.length; ii++) {
-            if (ginfo.states.research_stations[ii] == whereto) {
-                ginfo.states.research_stations.splice(ii, 1);
-                helpNamespace.set_state(STATE_START_OF_TURN);
-                actionNamespace.build_it();
-                // graphNamespace.redraw();
-                break;
-            }
-        }
+    if (helpNamespace.get_state() == STATE_MUST_MOVE_RS) {
+        actionNamespace.build_remove(whereto);
         return;
     }
     var plb = ginfo.states.turn;
