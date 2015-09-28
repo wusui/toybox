@@ -7,9 +7,12 @@ actionNamespace = function() {
 var operations;
 var careful;
 var carefulTimer;
+var careCallback;
 var pbpTimer;
 var wait;
 var text;
+var rs_index;
+var rs_whereto;
 var activity;
 var aparms;
 
@@ -27,6 +30,10 @@ Action.prototype.pastTense=function(){
 Action.prototype.getVerb=function() {
     return this.verb;
 };
+
+function Shuttle() {
+    this.verb = 'Shuttle';
+}
 
 function Move() {
     this.verb = 'Move';
@@ -89,17 +96,35 @@ function builddesc(parms) {
 
 function build_remove(whereto) {
     var ginfo = gameobjsNamespace.get_game_info();
+    wait = false;
     for (var ii=0; ii < ginfo.states.research_stations.length; ii++) {
         if (ginfo.states.research_stations[ii] == whereto) {
-            ginfo.states.research_stations.splice(ii, 1);
-            helpNamespace.set_state(STATE_START_OF_TURN);
-            actionNamespace.build_it();
-            gameobjsNamespace.set_pbpw(true);
-            text += "<BR><BR>Research station removed from ";
-            text += gameobjsNamespace.get_city(whereto);
-            show_pbp();
+            rs_index = ii;
+            rs_whereto = whereto;
+            if (document.getElementById("careful").checked) {
+                wait = true;
+                careCallback = build_rm;
+                var rs_nmb = ginfo.states.research_stations[rs_index];
+                carefulDialog('Remove research station at '+gameobjsNamespace.get_city(rs_nmb)+'?');
+                carefulTimer = setInterval(function() { caretimer(); }, 1000);
+                return;
+            }
+            build_rm();
             break;
         }
+    }
+}
+
+function build_rm() {
+    var ginfo = gameobjsNamespace.get_game_info();
+    ginfo.states.research_stations.splice(rs_index, 1);
+    helpNamespace.set_state(STATE_START_OF_TURN);
+    build_it();
+    if (document.getElementById("playbyplay").checked) {
+        gameobjsNamespace.set_pbpw(true);
+        text += "<BR><BR>Research station removed from ";
+        text += gameobjsNamespace.get_city(rs_whereto);
+        show_pbp();
     }
 }
 
@@ -112,24 +137,27 @@ function make_proto(main_obj, action_rtn, descript_rtn) {
 function initialize() {
     make_proto(Move, moveaction, movedesc);
     make_proto(Build, buildaction, builddesc);
+    make_proto(Shuttle, moveaction, movedesc);
     Build.prototype.pastTense = function() { return 'built'; };
     operations = {};
     operations.move = new Move();
     operations.build = new Build();
+    operations.shuttle = new Shuttle();
 }
 
 function doAction(action, parms) {
     activity = operations[action];
     aparms = parms;
-    helpNamespace.set_state(STATE_START_OF_TURN);
     wait = false;
     text = activity.descript(parms);
     if (document.getElementById("careful").checked) {
         wait = true;
+        careCallback = doAction2;
         carefulDialog(activity.getVerb() + ' ' + text);
         carefulTimer = setInterval(function() { caretimer(); }, 1000);
         return;
     }
+    helpNamespace.set_state(STATE_START_OF_TURN);
     doAction2();
 }
 
@@ -183,7 +211,7 @@ function caretimer() {
             graphNamespace.redraw();
             return;
         }
-        doAction2();
+        careCallback();
     }
 }
 
@@ -217,6 +245,7 @@ function set_careful(torf) {
 }
 
     return {
+        wait:wait,
         initialize:initialize,
         build_it:build_it,
         build_remove:build_remove,

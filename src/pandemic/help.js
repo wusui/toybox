@@ -108,7 +108,27 @@ function set_state(s) {
  * is 0).
  */
 function restart() {
-    state = STATE_START_OF_TURN;
+    if (state != STATE_START_OF_TURN) {
+        $(function(){
+            $("#restartmsg").dialog({
+                modal: false,
+                height: 200,
+                width: 400,
+                title: 'HELP',
+                buttons: {
+                    "Okay": function () {
+                        $(this).dialog('close');
+                        gameobjsNamespace.set_pbpw(false);
+                        actionNamespace.wait = false;
+                        state = STATE_START_OF_TURN;
+                        if (document.getElementById("helpful").checked) {
+                            help_dialog();
+                        }
+                    }
+                }
+            });
+        });
+    }
 }
 
 var STD_TXT_0 = ['one move', 'two moves', 'three moves', 'four moves'];

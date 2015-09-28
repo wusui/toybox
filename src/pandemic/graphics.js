@@ -280,6 +280,10 @@ function evntHandler(event) {
     }
     var plb = ginfo.states.turn;
     var spt = ginfo.players[plb].clocation;
+    if (is_rs(spt) && is_rs(whereto)) {
+        actionNamespace.doAction('shuttle', [plb,whereto]);
+        return;
+    }
     for (i=0; i < worldMap[spt][2].length; i++) {
         if (worldMap[spt][2][i] == whereto) {
             //gameobjsNamespace.make_move(plb, whereto);
@@ -287,6 +291,16 @@ function evntHandler(event) {
             break;
         }
     }
+}
+
+function is_rs(cityloc) {
+    var ginfo = gameobjsNamespace.get_game_info();
+    for (var ii=0; ii < ginfo.states.research_stations.length; ii++) {
+        if (cityloc === ginfo.states.research_stations[ii]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function drawCity(city) {
