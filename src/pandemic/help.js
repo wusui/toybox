@@ -39,129 +39,130 @@ helpNamespace = function() {
  *
  * @author Warren Usui
  */
-var state;
-var switch_array = [cmd_start, too_many_rs];
-var helpTimer;
+    var state;
+    var switch_array = [cmd_start, too_many_rs];
+    var helpTimer;
 
-/**
- * Wrapper for help
- *
- * Setup callback if we are going to display a play-by-play dialog first.
- */
-function help() {
-    if (gameobjsNamespace.get_pbpw() && state === STATE_START_OF_TURN) {
-        helpTimer = setInterval(function() { helptimer(); }, 1000);
-        return;
-    }
-    help_dialog();
-}
-
-/**
- * Actual dialog.
- *
- * Display dialog message based on the state.
- */
-function help_dialog() {
-    var msg = switch_array[state]();
-    document.getElementById("helpmessage").innerHTML = msg;
-    $(function(){
-        $("#helpmessage").dialog({
-            modal: true,
-            height: 400,
-            width: 400,
-            title: 'HELP',
-            buttons: {
-                "Okay": function () {
-                    $(this).dialog('close');
-                }
-            }
-        });
-    });
-}
-
-/**
- * Stop timer loop when play-by-play dialog is done.
- */
-function helptimer() {
-    if (!gameobjsNamespace.get_pbpw()) {
-        clearInterval(helpTimer);
+    /**
+     * Wrapper for help
+     *
+     * Setup callback if we are going to display a play-by-play dialog first.
+     */
+    function help() {
+        if (gameobjsNamespace.get_pbpw() && state === STATE_START_OF_TURN) {
+            helpTimer = setInterval(function() { helptimer(); }, 1000);
+            return;
+        }
         help_dialog();
     }
-}
 
-/**
- * @returns state number
- */
-function get_state() {
-    return state;
-}
-
-/**
- * @param  new state number to set
- */
-function set_state(s) {
-    state = s;
-}
-
-/**
- * set conditions back to the start of the command (most notably, the state
- * is 0).
- */
-function restart() {
-    if (state != STATE_START_OF_TURN) {
+    /**
+     * Actual dialog.
+     *
+     * Display dialog message based on the state.
+     */
+    function help_dialog() {
+        var msg = switch_array[state]();
+        document.getElementById("helpmessage").innerHTML = msg;
         $(function(){
-            $("#restartmsg").dialog({
-                modal: false,
-                height: 200,
+            $("#helpmessage").dialog({
+                modal: true,
+                height: 400,
                 width: 400,
                 title: 'HELP',
                 buttons: {
                     "Okay": function () {
                         $(this).dialog('close');
-                        gameobjsNamespace.set_pbpw(false);
-                        actionNamespace.wait = false;
-                        state = STATE_START_OF_TURN;
-                        if (document.getElementById("helpful").checked) {
-                            help_dialog();
-                        }
                     }
                 }
             });
         });
     }
-}
 
-var STD_TXT_0 = ['one move', 'two moves', 'three moves', 'four moves'];
-/**
- * @returns dialog text at the start of a command.
- */
-function cmd_start() {
-    var ans;
-    var hinfo = gameobjsNamespace.get_game_info();
-    var playr = hinfo.states.turn;
-    var playa = hinfo.players[playr];
-    person = graphNamespace.get_role_text(playa.role);
-    mnumb = gameobjsNamespace.gpmoves() - 1;
-    if (mnumb < 0) {
-        mnumb = 0;
+    /**
+     * Stop timer loop when play-by-play dialog is done.
+     */
+    function helptimer() {
+        if (!gameobjsNamespace.get_pbpw()) {
+            clearInterval(helpTimer);
+            help_dialog();
+        }
     }
-    ans = "The " + person + " has " + STD_TXT_0[mnumb] + " left.<BR>";
-    if (playa.role === 'D') {
-        ans += "You can click on a player to move that player.<BR>";
-    }
-    ans += "<BR>To move to a city, click on that city.";
-    ans += "<BR><BR>To play a card, click on that card.";
-    ans += "<BR><BR>To perform another action, click on one of Special Action buttons.";
-    return ans;
-}
 
-/**
- * @returns dialog text if the user needs to delete a research station.
- */
-function too_many_rs() {
-    return 'Too many research stations in use.<BR><BR>' +
-           'Click on station to be moved to this new location.';
-}
+    /**
+     * @returns state number
+     */
+    function get_state() {
+        return state;
+    }
+
+    /**
+     * @param  new state number to set
+     */
+    function set_state(s) {
+        state = s;
+    }
+
+    /**
+     * set conditions back to the start of the command (most notably, the state
+     * is 0).
+     */
+    function restart() {
+        if (state != STATE_START_OF_TURN) {
+            $(function(){
+                $("#restartmsg").dialog({
+                    modal: false,
+                    height: 200,
+                    width: 400,
+                    title: 'HELP',
+                    buttons: {
+                        "Okay": function () {
+                            $(this).dialog('close');
+                            gameobjsNamespace.set_pbpw(false);
+                            actionNamespace.wait = false;
+                            state = STATE_START_OF_TURN;
+                            if (document.getElementById("helpful").checked) {
+                                help_dialog();
+                            }
+                        }
+                    }
+               });
+            });
+        }
+    }
+
+    var STD_TXT_0 = ['one move', 'two moves', 'three moves', 'four moves'];
+    /**
+     * @returns dialog text at the start of a command.
+     */
+    function cmd_start() {
+        var ans;
+        var hinfo = gameobjsNamespace.get_game_info();
+        var playr = hinfo.states.turn;
+        var playa = hinfo.players[playr];
+        person = graphNamespace.get_role_text(playa.role);
+        mnumb = gameobjsNamespace.gpmoves() - 1;
+        if (mnumb < 0) {
+            mnumb = 0;
+        }
+        ans = "The " + person + " has " + STD_TXT_0[mnumb] + " left.<BR>";
+        if (playa.role === 'D') {
+            ans += "You can click on a player to move that player.<BR>";
+        }
+        ans += "<BR>To move to a city, click on that city.";
+        ans += "<BR><BR>To play a card, click on that card.";
+        ans += "<BR><BR>To perform another action, click on one ";
+        ans += " of Special Action buttons.";
+        return ans;
+    }
+
+    /**
+     * @returns dialog text if the user needs to delete a research station.
+     */
+    function too_many_rs() {
+        return 'Too many research stations in use.<BR><BR>' +
+               'Click on station to be moved to this new location.';
+    }
 
     return {
         set_state:set_state,
