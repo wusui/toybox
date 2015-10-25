@@ -289,8 +289,10 @@ graphNamespace = function() {
         var plb = ginfo.states.turn;
         var spt = ginfo.players[plb].clocation;
         if (is_rs(spt) && is_rs(whereto)) {
-            actionNamespace.doAction('shuttle', [plb,whereto]);
-            return;
+            if (spt !== whereto) {
+                actionNamespace.doAction('shuttle', [plb,whereto]);
+                return;
+            }
         }
         for (i=0; i < worldMap[spt][2].length; i++) {
             if (worldMap[spt][2][i] == whereto) {
