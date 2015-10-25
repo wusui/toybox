@@ -11,6 +11,7 @@
     <script src="buttons.js"></script>
     <script src="help.js"></script>
     <script src="actions.js"></script>
+    <script src="build.js"></script>
     <script src="injector.js"></script>
 </head>
 <body onload="gameobjsNamespace.initialize();">
@@ -32,7 +33,7 @@
     <input type="checkbox" id="careful">Careful
     <br>
     <p><B>Special Actions</B></p>
-    <button id="buildb" onclick="buttonsNamespace.build()">BUILD</button>
+    <button id="buildb" onclick="buildNamespace.clickButton()">BUILD</button>
     &nbsp;&nbsp;&nbsp;
     <button id="healb" onclick="buttonsNamespace.heal()">HEAL</button>
     <br>
@@ -56,7 +57,8 @@
         <br>
     </div>
   </div>
-  <div id="pbpmessage" style="display:none">PLAY BY PLAY MSG GOES HERE</div>
+  <div id="pbpmessage1" style="display:none">PLAY BY PLAY MSG GOES HERE</div>
+  <div id="pbpmessage2" style="display:none">PLAY BY PLAY MSG GOES HERE</div>
   <div id="helpmessage" style="display:none">HELP MESSAGE GOES HERE</div>
   <div id="dialogcareful" style="display:none">CAREFUL MESSAGE GOES HERE</div>
   <div id="restartmsg" style="display:none">Actions have been restarted.</div>

@@ -105,7 +105,7 @@ graphNamespace = function() {
         document.getElementById("stats").innerHTML = scoreboard(ginfo);
         context3.fillStyle = "#000000";
         context3.fillText("more stuff goes here",50,CONTINGENCYCARD_LOC);
-        buttonsNamespace.checkBuild(ginfo);
+        buildNamespace.fgbgButton(ginfo);
         buttonsNamespace.checkHeal(ginfo);
         buttonsNamespace.checkCure(ginfo);
         if (document.getElementById("helpful").checked) {
@@ -277,7 +277,13 @@ graphNamespace = function() {
             }
         }
         if (helpNamespace.get_state() == STATE_MUST_MOVE_RS) {
-            actionNamespace.build_remove(whereto);
+            for (var ii=0; ii < ginfo.states.research_stations.length; ii++) {
+                if (ginfo.states.research_stations[ii] == whereto) {
+                    //actionNamespace.build_remove(ii, whereto);
+                    actionNamespace.doAction('close', [ii, whereto]);
+                    break;
+                }
+            }
             return;
         }
         var plb = ginfo.states.turn;

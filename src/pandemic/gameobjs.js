@@ -9,7 +9,6 @@ gameobjsNamespace = function() {
     var cityNameInfo;
     var ginfo;
     var pmoves;
-    var w4pbp;
     
     function process_map() {
         cityNameInfo = {};
@@ -130,7 +129,7 @@ gameobjsNamespace = function() {
         helpNamespace.set_state(STATE_START_OF_TURN);
         //alert(JSON.stringify(ginfo));
         injectorNamespace.set_starter('O');
-        injectorNamespace.extra_stations([5,13,17,28,38,40,])
+        injectorNamespace.extra_stations([5,13,28,40])
     }
     
     function get_game_info() {
@@ -143,14 +142,6 @@ gameobjsNamespace = function() {
     
     function get_city(number) {
         return worldMap[number][1];
-    }
-    
-    function get_pbpw() {
-        return w4pbp;
-    }
-    
-    function set_pbpw(tfval) {
-        w4pbp = tfval;
     }
     
     function initialize() {
@@ -212,8 +203,6 @@ gameobjsNamespace = function() {
         get_city:get_city,
         shuffle:shuffle,
         dump_card:dump_card,
-        get_pbpw:get_pbpw,
-        set_pbpw:set_pbpw,
         skip:skip
     };
 }();
