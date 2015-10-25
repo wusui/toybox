@@ -49,7 +49,7 @@ helpNamespace = function() {
      * Setup callback if we are going to display a play-by-play dialog first.
      */
     function help() {
-        if (gameobjsNamespace.get_pbpw() && state === STATE_START_OF_TURN) {
+        if (actionNamespace.checkWaits() && state === STATE_START_OF_TURN) {
             helpTimer = setInterval(function() { helptimer(); }, 1000);
             return;
         }
@@ -83,7 +83,7 @@ helpNamespace = function() {
      * Stop timer loop when play-by-play dialog is done.
      */
     function helptimer() {
-        if (!gameobjsNamespace.get_pbpw()) {
+        if (!gameobjsNamespace.checkWaits()) {
             clearInterval(helpTimer);
             help_dialog();
         }
@@ -118,8 +118,8 @@ helpNamespace = function() {
                     buttons: {
                         "Okay": function () {
                             $(this).dialog('close');
-                            gameobjsNamespace.set_pbpw(false);
-                            actionNamespace.wait = false;
+                            gameobjsNamespace.clearWaits();
+                            actionNamespace.clearWaits();
                             state = STATE_START_OF_TURN;
                             if (document.getElementById("helpful").checked) {
                                 help_dialog();

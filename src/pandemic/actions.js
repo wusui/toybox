@@ -5,16 +5,6 @@
 actionNamespace = function() {
     
     var operations;
-    var careful;
-    var carefulTimer;
-    var careCallback;
-    var pbpTimer;
-    var wait;
-    var text;
-    var rs_index;
-    var rs_whereto;
-    var activity;
-    var aparms;
     
     function Action() {
         this.verb = 'action';
@@ -94,40 +84,18 @@ actionNamespace = function() {
         return desc;
     }
     
-    function build_remove(whereto) {
-        var ginfo = gameobjsNamespace.get_game_info();
-        wait = false;
-        for (var ii=0; ii < ginfo.states.research_stations.length; ii++) {
-            if (ginfo.states.research_stations[ii] == whereto) {
-                rs_index = ii;
-                rs_whereto = whereto;
-                if (document.getElementById("careful").checked) {
-                    wait = true;
-                    careCallback = build_rm;
-                    var rs_nmb = ginfo.states.research_stations[rs_index];
-                    carefulDialog('Remove research station at '+gameobjsNamespace.get_city(rs_nmb)+'?');
-                    carefulTimer = setInterval(function() { caretimer(); }, 1000);
-                    return;
-                }
-                build_rm();
-                break;
-            }
-        }
+    function Close() {
+        this.verb = 'Close';
     }
-    
-    function build_rm() {
+
+    function closeaction(parms) {
         var ginfo = gameobjsNamespace.get_game_info();
-        ginfo.states.research_stations.splice(rs_index, 1);
+        ginfo.states.research_stations.splice(activity.aparms[0], 1);
         helpNamespace.set_state(STATE_START_OF_TURN);
         build_it();
-        if (document.getElementById("playbyplay").checked) {
-            gameobjsNamespace.set_pbpw(true);
-            text += "<BR><BR>Research station removed from ";
-            text += gameobjsNamespace.get_city(rs_whereto);
-            show_pbp();
-        }
+        show_pbp(operations.build, '2');
     }
-    
+
     function make_proto(main_obj, action_rtn, descript_rtn) {
         main_obj.prototype = new Action();
         main_obj.prototype.action = action_rtn;
@@ -135,50 +103,69 @@ actionNamespace = function() {
     }
     
     function initialize() {
+        operations = {};
         make_proto(Move, moveaction, movedesc);
         make_proto(Build, buildaction, builddesc);
         make_proto(Shuttle, moveaction, movedesc);
+        make_proto(Close, closeaction, builddesc);
         Build.prototype.pastTense = function() { return 'built'; };
-        operations = {};
         operations.move = new Move();
         operations.build = new Build();
         operations.shuttle = new Shuttle();
+        operations.close = new Close();
+    }
+
+    function checkWaits() {
+        for (actn in operations) {
+            if (operations[actn].wait) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function clearWaits() {
+        for (actn in operations) {
+            operations[actn].wait = false;
+        }
+        //operations.move.wait = false;
+        //operations.build.wait = false;
+        //operations.shuttle.wait = false;
+        //operations.close.wait = false;
     }
     
     function doAction(action, parms) {
         activity = operations[action];
-        aparms = parms;
-        wait = false;
-        text = activity.descript(parms);
+        activity.aparms = parms;
+        activity.wait = false;
+        activity.text = activity.descript(parms);
         if (document.getElementById("careful").checked) {
-            wait = true;
-            careCallback = doAction2;
-            carefulDialog(activity.getVerb() + ' ' + text);
-            carefulTimer = setInterval(function() { caretimer(); }, 1000);
+            activity.wait = true;
+            activity.careCallback = doAction2;
+            carefulDialog(activity.getVerb() + ' ' + activity.text, activity);
+            activity.carefulTimer = setInterval(function() { caretimer(activity); }, 1000);
             return;
         }
         helpNamespace.set_state(STATE_START_OF_TURN);
-        doAction2();
+        doAction2(activity);
     }
     
-    function doAction2() {
-        if (document.getElementById("playbyplay").checked) {
-            gameobjsNamespace.set_pbpw(true);
-        }
-        activity.action(aparms);
+    function doAction2(activity) {
+        activity.action(activity.aparms);
         if (helpNamespace.get_state() !== STATE_START_OF_TURN) {
             return;
         }
-        show_pbp();
+        show_pbp(activity, '1');
     }
     
-    function show_pbp() {
+    function show_pbp(activity, pbpno) {
+        var pbp_string = "pbpmessage" + pbpno;
         if (document.getElementById("playbyplay").checked) {
-            var msg = "You "+activity.pastTense().toLowerCase()+" "+text;
-            document.getElementById("pbpmessage").innerHTML = msg;
-            wait = true;
+            var msg = "You "+activity.pastTense().toLowerCase()+" "+activity.text;
+            document.getElementById(pbp_string).innerHTML = msg;
+            activity.wait = true;
             $(function(){
-                $("#pbpmessage").dialog({
+                $("#"+pbp_string).dialog({
                     modal: true,
                     height: 300,
                     width: 400,
@@ -186,37 +173,36 @@ actionNamespace = function() {
                     buttons: {
                         "Okay": function () {
                             $(this).dialog('close');
-                            wait = false;
+                            activity.wait = false;
                         }
                     }
                 });
             });
-            pbpTimer = setInterval(function() { pbptimer(); }, 1000);
+            activity.pbpTimer = setInterval(function() { pbptimer(activity); }, 1000);
             return;
         }
         graphNamespace.redraw();
     }
     
-    function pbptimer() {
-        if (!wait) {
-            clearInterval(pbpTimer);
-            gameobjsNamespace.set_pbpw(false);
+    function pbptimer(activity) {
+        if (!activity.wait) {
+            clearInterval(activity.pbpTimer);
         }
     }
     
-    function caretimer() {
-        if (!wait) {
-            clearInterval(carefulTimer);
-            if (!careful) {
+    function caretimer(activity) {
+        if (!activity.wait) {
+            clearInterval(activity.carefulTimer);
+            if (!activity.careful) {
                 graphNamespace.redraw();
                 return;
             }
-            careCallback();
+            activity.careCallback(activity);
         }
     }
     
     
-    function carefulDialog(dtext) {
+    function carefulDialog(dtext, activity) {
         document.getElementById("dialogcareful").innerHTML = dtext;
         $(function(){
             $("#dialogcareful").dialog({
@@ -228,26 +214,26 @@ actionNamespace = function() {
                 buttons: {
                     "Yes": function () {
                         $(this).dialog('close');
-                        set_careful(true);
+                        set_careful(true, activity);
                     },
                     "No": function () {
                         $(this).dialog('close');
-                        set_careful(false);
+                        set_careful(false, activity);
                     }
                 }
             });
         });
     }
     
-    function set_careful(torf) {
-        careful = torf;
-        wait = false;
+    function set_careful(torf, activity) {
+        activity.careful = torf;
+        activity.wait = false;
     }
-    
+
     return {
-        wait:wait,
         initialize:initialize,
-        build_remove:build_remove,
+        checkWaits:checkWaits,
+        clearWaits:clearWaits,
         doAction:doAction
     };
 }();

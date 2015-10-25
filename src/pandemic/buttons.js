@@ -4,13 +4,6 @@
  **********************************************************************/
 buttonsNamespace = function() {
     
-    var bld_plb;
-    var bld_spt;
-    
-    function build() {
-        actionNamespace.doAction('build', [bld_plb, bld_spt]);
-    }
-    
     function heal() {
         alert("heal");
         alert(JSON.stringify(gameobjsNamespace.get_game_info()));
@@ -18,27 +11,6 @@ buttonsNamespace = function() {
     
     function cure() {
         alert("cure");
-    }
-    
-    function checkBuild(ginfo) {
-        document.getElementById('buildb').disabled = true;
-        bld_plb = ginfo.states.turn;
-        bld_spt = ginfo.players[bld_plb].clocation;
-        for (var i=0; i < ginfo.states.research_stations.length; i++) {
-            if (bld_spt == ginfo.states.research_stations[i]) {
-                return;
-            }
-        }
-        if (ginfo.players[bld_plb].role == 'O') {
-            document.getElementById('buildb').disabled = false;
-            return;
-        }
-        for (i=0; i < ginfo.players[bld_plb].cards.length; i++) {
-            if (bld_spt == ginfo.players[bld_plb].cards[i]) {
-                document.getElementById('buildb').disabled = false;
-                return;
-            }
-        }
     }
     
     function checkHeal(ginfo) {
@@ -90,10 +62,8 @@ buttonsNamespace = function() {
     }
     
     return {
-        build:build,
         heal:heal,
         cure:cure,
-        checkBuild:checkBuild,
         checkHeal:checkHeal,
         checkCure:checkCure
     };
