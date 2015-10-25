@@ -29,71 +29,12 @@ actionNamespace = function() {
         this.verb = 'Move';
     }
     
-    function moveaction(parms) {
-        var plb;
-        var whereto;
-        plb = parms[0];
-        whereto = parms[1];
-        var lginfo = gameobjsNamespace.get_game_info();
-        lginfo.players[plb].clocation = whereto;
-        gameobjsNamespace.skip();
-    }
-    
-    function movedesc(parms) {
-        var desc = ' from ';
-        var lginfo = gameobjsNamespace.get_game_info();
-        var cnumb = lginfo.players[parms[0]].clocation;
-        desc += gameobjsNamespace.get_city(cnumb);
-        desc += ' to ';
-        desc += gameobjsNamespace.get_city(parms[1]);
-        return desc;
-    }
-    
     function Build() {
         this.verb = 'Build';
     }
     
-    var MAX_STATIONS = 6;
-    function buildaction(parms) {
-        loc_pnumb = parms[0];
-        loc_city = parms[1];
-        var lginfo = gameobjsNamespace.get_game_info();
-        if (lginfo.states.research_stations.length >= MAX_STATIONS) {
-            helpNamespace.set_state(STATE_MUST_MOVE_RS);
-            helpNamespace.help();
-            return;
-        }
-        build_it();
-    }
-    
-    var loc_pnumb;
-    var loc_city;
-    function build_it() {
-        var lginfo = gameobjsNamespace.get_game_info();
-        var pval = lginfo.players[loc_pnumb].role;
-        if (pval !== 'O') { 
-            gameobjsNamespace.dump_card(loc_pnumb, loc_city); 
-        }
-        lginfo.states.research_stations.push(loc_city);
-        gameobjsNamespace.skip();
-    }
-    
-    function builddesc(parms) {
-        desc = ' a research station at ';
-        desc += gameobjsNamespace.get_city(parms[1]);
-        return desc;
-    }
-    
     function Close() {
         this.verb = 'Close';
-    }
-
-    function closeaction(parms) {
-        var ginfo = gameobjsNamespace.get_game_info();
-        ginfo.states.research_stations.splice(activity.aparms[0], 1);
-        helpNamespace.set_state(STATE_START_OF_TURN);
-        build_it();
-        show_pbp(operations.build, '2');
     }
 
     function make_proto(main_obj, action_rtn, descript_rtn) {
@@ -104,10 +45,10 @@ actionNamespace = function() {
     
     function initialize() {
         operations = {};
-        make_proto(Move, moveaction, movedesc);
-        make_proto(Build, buildaction, builddesc);
-        make_proto(Shuttle, moveaction, movedesc);
-        make_proto(Close, closeaction, builddesc);
+        make_proto(Move, moveNamespace.moveaction, moveNamespace.movedesc);
+        make_proto(Build, buildNamespace.buildaction, buildNamespace.builddesc);
+        make_proto(Shuttle, moveNamespace.moveaction, moveNamespace.movedesc);
+        make_proto(Close, buildNamespace.closeaction, buildNamespace.builddesc);
         Build.prototype.pastTense = function() { return 'built'; };
         operations.move = new Move();
         operations.build = new Build();
@@ -128,10 +69,6 @@ actionNamespace = function() {
         for (actn in operations) {
             operations[actn].wait = false;
         }
-        //operations.move.wait = false;
-        //operations.build.wait = false;
-        //operations.shuttle.wait = false;
-        //operations.close.wait = false;
     }
     
     function doAction(action, parms) {
@@ -158,6 +95,10 @@ actionNamespace = function() {
         show_pbp(activity, '1');
     }
     
+    function close_pbp() {
+        show_pbp(operations.build, '2');
+    }
+
     function show_pbp(activity, pbpno) {
         var pbp_string = "pbpmessage" + pbpno;
         if (document.getElementById("playbyplay").checked) {
@@ -234,6 +175,7 @@ actionNamespace = function() {
         initialize:initialize,
         checkWaits:checkWaits,
         clearWaits:clearWaits,
+        close_pbp:close_pbp,
         doAction:doAction
     };
 }();
