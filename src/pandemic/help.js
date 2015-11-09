@@ -15,7 +15,9 @@ helpNamespace = function() {
  * message will tell the user what needs to be done in the current state. 
  *
  * Entry points either set or return the current state (set_state or get_state)
- * or produce an appropriate help dialog message help.
+ * restart (set state back to 0 with all associated variables cleared -- in
+ * other words start over as if none of the yet to be finalized move has
+ * been made), or produce an appropriate help dialog message help.
  *
  * States are numbered as follows:
  *   0 -- Start state.  It is the start of an action and all the moves
@@ -35,19 +37,19 @@ helpNamespace = function() {
  *                      when in state 0.
  *      helpTimer -- namespace-wide reference to interval timer.
  *
- * @exports get_state, set_state, restart, help
- *
  * @author Warren Usui
  */
     var state;
     var switch_array = [cmd_start, too_many_rs];
     var helpTimer;
 
-    /**
+    /**************************************************************************
+     *
      * Wrapper for help
      *
      * Setup callback if we are going to display a play-by-play dialog first.
-     */
+     *
+     *************************************************************************/
     function help() {
         if (actionNamespace.checkWaits() && state === STATE_START_OF_TURN) {
             helpTimer = setInterval(function() { helptimer(); }, 1000);
@@ -89,24 +91,30 @@ helpNamespace = function() {
         }
     }
 
-    /**
+    /**************************************************************************
+     *
      * @returns state number
-     */
+     *
+     *************************************************************************/
     function get_state() {
         return state;
     }
 
-    /**
+    /**************************************************************************
+     *
      * @param  new state number to set
-     */
+     *
+     *************************************************************************/
     function set_state(s) {
         state = s;
     }
 
-    /**
+    /**************************************************************************
+     *
      * set conditions back to the start of the command (most notably, the state
      * is 0).
-     */
+     *
+     *************************************************************************/
     function restart() {
         if (state != STATE_START_OF_TURN) {
             $(function(){
