@@ -128,8 +128,9 @@ gameobjsNamespace = function() {
                  'germs': grms, 'players': lplayers};
         helpNamespace.set_state(STATE_START_OF_TURN);
         //alert(JSON.stringify(ginfo));
-        injectorNamespace.set_starter('O');
-        injectorNamespace.extra_stations([5,13,28,40])
+        injectorNamespace.set_starter('M');
+        injectorNamespace.extra_stations(['New York','Istanbul','Lagos','Hong Kong']);
+        injectorNamespace.add_city_cards(['Bangkok', 'Kolkata']);
     }
     
     function get_game_info() {
@@ -144,6 +145,10 @@ gameobjsNamespace = function() {
         return worldMap[number][1];
     }
     
+    function get_city_numb(name) {
+        return cityNameInfo[name];
+    }
+
     function initialize() {
         var wrld_map = process_map();
         w4pbp = false;
@@ -201,6 +206,7 @@ gameobjsNamespace = function() {
         get_game_info:get_game_info,
         gpmoves:gpmoves,
         get_city:get_city,
+        get_city_numb:get_city_numb,
         shuffle:shuffle,
         dump_card:dump_card,
         skip:skip

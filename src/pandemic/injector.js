@@ -20,13 +20,34 @@ injectorNamespace = function() {
     function extra_stations(locations) {
         lginfo = gameobjsNamespace.get_game_info();
         for (var i=0; i<locations.length; i++) {
-            if (i >= 5) break;
-            lginfo.states.research_stations.push(locations[i]);
+            if (i >= 5) {
+                break;
+            }
+            var cityNumb = gameobjsNamespace.get_city_numb(locations[i]);
+            lginfo.states.research_stations.push(cityNumb);
+        }
+    }
+    
+    function add_city_cards(city_list) {
+        lginfo = gameobjsNamespace.get_game_info();
+        for (var i=0; i<city_list.length; i++) {
+            var cardn = gameobjsNamespace.get_city_numb(city_list[i]);
+            var not_found = true;
+            for (var j=0; j<lginfo.players[0].cards; j++) {
+                if (lginfo.players[0].cards[j] === cardn) {
+                    var not_found = false;
+                    break;
+                }
+            }
+            if (not_found) {
+                lginfo.players[0].cards.push(cardn);
+            }
         }
     }
 
     return {
         set_starter:set_starter,
-        extra_stations:extra_stations
+        extra_stations:extra_stations,
+        add_city_cards:add_city_cards
     };
 }();
