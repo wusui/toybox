@@ -64,8 +64,8 @@ save_paths = lambda node_info : node_info['extras'].append(map_stack(node_info))
 #
 mark_dups = lambda node_info : md_inner(map_stack(node_info), node_info)
 md_inner = lambda our_stack, node_info : \
-    [md_chkdup(our_stack, node_info, past_stack) \
-             for past_stack in node_info['extras'][:-1]] != ['a'] and \
+    ([md_chkdup(our_stack, node_info, past_stack) \
+             for past_stack in node_info['extras'][:-1]] or True) and \
     md_collect(our_stack, node_info)
 md_chkdup = lambda our_stack, node_info, past_stack : \
     [i for i in our_stack if i in past_stack] == our_stack and \
@@ -80,8 +80,8 @@ md_collect = lambda our_stack, node_info : len(our_stack) == 5 and \
 #
 collect_layouts = lambda node_info, accumulator : \
     (node_info['mdata'] and accumulator.append(node_info['mdata'][0])) or \
-    [collect_layouts(entry, accumulator) for entry in node_info['kids']] == \
-    ['a'] or accumulator
+    [collect_layouts(entry, accumulator) for entry in node_info['kids']] \
+    and accumulator
 
 #
 # Wrapper to call functions for each level of the tree being built.
