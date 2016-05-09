@@ -35,10 +35,8 @@ def arrange():
             sortie[skey] = sorted(all_data[skey].items(), key=operator.itemgetter(1))[::-1]
     all_info = {}
     for nkey in sortie.keys():
-        print "NEW TABLE " + nkey
         llist = []
         for entry in sortie[nkey][0:25]:
-            print entry[0] + " --- " + str(entry[1])
             newline = {}
             first_part = entry[0].split(':')
             newline['name'] = first_part[0]
