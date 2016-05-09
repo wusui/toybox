@@ -42,4 +42,7 @@ def initialize(ini_file):
     #retv['team'] = int(tm_html_data.split('/')[-1])
     retv['team'] = get_team_names(retv['league'])[ini_data['name']]
     retv['today'] = datetime.now().timetuple().tm_yday
+    retv['totalg'] = retv['end'] - retv['start']
+    retv['sofar'] = retv['today'] - retv['start']
+    retv['daysleft'] = retv['end'] - retv['today']
     return retv
