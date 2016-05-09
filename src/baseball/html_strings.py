@@ -1,14 +1,15 @@
 #!/usr/bin/env python
+from datetime import datetime
 BATTERS = ['B', 'C', '1B', '2B', '3B', 'SS', 'OF']
 PITCHERS = ['P', 'SP', 'RP']
-PERIODS = [7, 14, 30, 2015, 2016]
+PERIODS = [7, 14, 30, datetime.now().year]
 B_STATS = {'H/AB': [60, 1], 'R': [7, 1], 'HR': [12, 1],
            'RBI': [13, 1], 'SB': [14, 1]}
 P_STATS = {'IP': [50, 1], 'W': [28, 1], 'SV': [32, 1],
            'K': [42, 1], 'ERA': [26, 0], 'WHIP': [27, 0]}
 
 COMMON_TXT = "http://baseball.fantasysports.yahoo.com/b1/%s/"
-REST = "players?status=A&pos=%s&cut_type=33&stat1=S_%s&myteam=0&sort=%d&sdir=%d "
+REST = "players?status=A&pos=%s&cut_type=33&stat1=S_%s&myteam=0&sort=%d&sdir=%d"
 
 def set_period(period):
     """Get string representation of period.
