@@ -24,22 +24,17 @@ def eval_others(pdata, period, ptype, startv):
             opos = oplyr['pos'].split(',')
             intr = [x for x in npos if x in opos]
             if len(intr) > 0:
-                #print p_stats
                 t_stats =  get_extrap(oplyr['stats'], startv['daysleft'], adj_period)
-                #print t_stats
-                #print plyr + " can replace " + oplyr['name']
                 pdata['tm_scores'].adjust_score(startv['team'], ptype, t_stats, p_stats)
                 total_points += pdata['tm_scores'].comp_score(startv['team'], ptype)
                 count += 1
                 pdata['tm_scores'].adjust_score(startv['team'], ptype, p_stats, t_stats)
         if count > 0:
             retv[plyr] = extrapolate(total_points * 10, 1, count)
-            print plyr + "    " + str(extrapolate(total_points * 10, 1, count))
     return retv
 
 def eval_loop():
     startv = initialize('roto.ini')
-    print startv
     league = startv['league']
     usno = startv['team']
     player_data = {}
@@ -51,7 +46,6 @@ def eval_loop():
     for period in [7, 14, 30, datetime.now().year]:
         player_data['our_plyrs'] = one_team(period, league, usno)
         for ptype in  [0, 1]:
-            print period, ptype
             tkey = str(period) + "-" + ['Batter', 'Pitcher'][ptype]
             all_data[tkey] = eval_others(player_data, period, ptype, startv)
     return all_data
