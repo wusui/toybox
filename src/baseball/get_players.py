@@ -37,6 +37,8 @@ def derivep(outs, factor, value):
         Int value extracted from pitching ratio and outs.
     """
     first_no = value.split(".")
+    if value == '0':
+        return 0
     ratio = int(first_no[0])*100 + int(first_no[1])
     ratio *= 10 * outs
     ratio //= factor * 100
@@ -75,6 +77,8 @@ def relist(table):
     """
     retv = []
     for record in table:
+        if record[0] == 'DL':
+            continue
         sp = 5
         if record[3] ==  'Video Playlist':
             sp += 1
