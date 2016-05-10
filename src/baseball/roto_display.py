@@ -6,6 +6,14 @@ from make_table import make_table
 from make_table import make_page
 
 def merge_tables(tlist, gpos):
+    """
+    Create a table by merging together a list of tables.  Write the result
+    to an html file.
+
+    Input:
+        tlist -- list of tables to be displayed.
+        gpos -- Either Batter or Pitcher (used for headers and created file names)
+    """
     table = "<table><tr>"
     for tbl in tlist:
         table += "<td>%s</td>" % tbl
@@ -15,6 +23,12 @@ def merge_tables(tlist, gpos):
         ofile.write(page)
 
 def build_tables(all_info):
+    """
+    Create two lists -- one for Batters and one for Pitchers.
+    Each list consists of tables of the displays for each period.
+
+    Input: all_info -- eval_loop representation of all the data.
+    """
     for gpos in ['Batter', 'Pitcher']:
         tlist = []
         for period in ['7','14','30',str(datetime.now().year)]:
@@ -27,6 +41,12 @@ def build_tables(all_info):
 
 
 def arrange():
+    """
+    Extract the eval_loop data for all combinations of playing periods and
+    postitions (Batter vs. Pitcher).  Sort each table and reduce the length
+    to 25 players.  THen rearrange the data into dictionaries suitable for
+    build_tables
+    """
     sortie = {}
     all_data = eval_loop()
     for period in ['7','14','30',str(datetime.now().year)]:
