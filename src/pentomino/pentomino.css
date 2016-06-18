@@ -1,0 +1,36 @@
+/**********************************************************************
+    Copyright (C) 2015  Warren Usui (warrenusui@eartlink.net)
+    Licensed under the GPL 3 license.
+ **********************************************************************/
+body {
+    background: #ffffff;
+}
+
+canvas {
+    background: #fff;
+    margin: 10px;
+}
+
+#ptitle {
+    text-align: center;
+}
+
+#chkbox {
+    text-align: center;
+    padding:5px;
+}
+#pradios {display:inline-block;margin-right:100px;}
+#pslider {display:inline-block;}
+
+.button {
+    text-align: center;
+    top: 50%
+}
+
+aardvark::before {
+    content:"0 seconds"
+}
+
+aardvark::after {
+    content:"1 minute"
+}
