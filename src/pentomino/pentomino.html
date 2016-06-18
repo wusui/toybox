@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<!-- Copyright (C) 2016  Warren Usui (warrenusui@eartlink.net)
+     Licensed under the GPL 3 license. -->
+<head>
+    <link rel="stylesheet" type="text/css" href="pentomino.css">
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel='stylesheet' />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="pentomino.js"></script>
+</head>
+<body onload="pentominoNamespace.pentomino();">
+    <h2 id="ptitle">PENTOMINOES</h2>
+<br>
+<p align="center">This program displays solutions for rectangular
+<a href="http://en.wikipedia.org/wiki/Pentomino" target="_blank">pentomino</a>
+tiling problems.</p>
+<br>
+    <div id="chkbox">
+        <form id="pradios">
+            <input type="radio" name="radioradio" value="3" checked>3x20
+            <input type="radio" name="radioradio" value="4">4x15
+            <input type="radio" name="radioradio" value="5">5x12
+            <input type="radio" name="radioradio" value="6" oncluck="pentominoNamespace.radio6()">6x10
+        </form>
+        <aardvark>
+        <input type="range" id="pslider"  min="0" max="60" innerHtml="Delay (0 to 60 seconds)"/>
+        </aardvark>
+        <br>
+        <canvas id="mycanvas" width="840" height="420" style="border:1px solid"></canvas>
+        <br>
+        <button id="startbutton" onclick="pentominoNamespace.startdisp()">START/STOP</button>
+        <button id="stepbutton" onclick="pentominoNamespace.stepdisp()">STEP</button>
+    </div>
+    <br>
+</body>
+</html>
