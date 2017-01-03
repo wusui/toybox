@@ -1,0 +1,11 @@
+#mycanvas {
+    float: left;
+    background: url(chessboard.png) transparent;
+    width: 480px;
+    height: 480px;
+    margin: 10px;
+    border: 1px solid black;
+}
+input[type="number"] {
+   width:30px;
+}
