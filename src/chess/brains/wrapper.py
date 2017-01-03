@@ -1,4 +1,6 @@
 #!/usr/bin/python
+#    Copyright (C) 2017 Warren Usui (warrenusui@eartlink.net)
+#    Licensed under the GPL 3 license.
 from board import board
 
 def solver_filter(in_data):

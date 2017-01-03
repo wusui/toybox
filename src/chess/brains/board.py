@@ -1,5 +1,6 @@
 #!/usr/bin/python
-
+#    Copyright (C) 2017 Warren Usui (warrenusui@eartlink.net)
+#    Licensed under the GPL 3 license.
 class board(object):
     """
     Representation of the chessboard.

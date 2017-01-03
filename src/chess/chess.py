@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#    Copyright (C) 2016 Warren Usui (warrenusui@eartlink.net)
+#    Copyright (C) 2017 Warren Usui (warrenusui@eartlink.net)
 #    Licensed under the GPL 3 license.
 """
 Cgi script to collect chess problem data.  Returns a solution, if possible.
