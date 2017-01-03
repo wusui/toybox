@@ -1,7 +1,22 @@
 #!/usr/bin/python
 
 class board(object):
+    """
+    Representation of the chessboard.
+
+    self.board is a board layout to be intialized from that data.
+    Pieces in the range 1-6 are white. Pieces in the range 11-16 are
+    black.
+        
+    self.error_list is a list of errors found while trying to solve the
+    problem
+        
+    self.msg_type either describes the error or indicates a solution.
+    """
     def __init__(self, setup):
+        """
+        setup contains a board setup string as described in ../chess.py
+        """
         self.board = []
         for _ in range(0, 8):
             self.board.append(8 * [0])
@@ -62,6 +77,10 @@ class board(object):
             return
 
     def validate(self, pstring, color):
+        """
+        set up the pieces for the color specified.  pstring should
+        be a comma separate list of piece positions in algerbraic notation.
+        """
         pieces = pstring.split(',')
         errors = []
         for txt in pieces:
@@ -94,14 +113,24 @@ class board(object):
         return errors
 
     def square(self, i, j):
+        """
+        Given a row and column, return the algebraic square notation.
+        """
         chr1 = 'abcdefgh'[j]
         chr2 = str(i+1)
         return chr1 + chr2
 
     def syntax_error(self, msg):
+        """
+        Handle a syntax error -- indicates the text sent is in error (probable
+        software issue).
+        """
         self.error_list.append(msg)
         self.msg_type = 'SYNTAX ERROR'
 
     def input_error(self, msg):
+        """
+        Handle an input error  -- probable user issue.
+        """
         self.error_list.append(msg)
         self.msg_type = 'INPUT ERROR'
