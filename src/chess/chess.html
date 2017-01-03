@@ -1,0 +1,34 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="chess.css">
+<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel='stylesheet' />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="chess.js"></script>
+</head>
+<body onload="chessNamespace.startMe">
+<h2 style="center">Chess Problem Solver -- version 1</h2>
+    <div style="float:left" >
+        <div>
+            <img id="img1" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/0/04/Chess_plt60.png'>
+            <img id="img2" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/2/28/Chess_nlt60.png'>
+            <img id="img3" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/9/9b/Chess_blt60.png'>
+            <img id="img4" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/5/5c/Chess_rlt60.png'>
+            <img id="img5" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/4/49/Chess_qlt60.png'>
+            <img id="img6" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_klt60.png'>
+            <input id="solver" type="button" onclick="chessNamespace.convertCanvasToBoard()" value="Solve" style="float:right"/>
+            <br>
+            <img id="imgA" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/c/cd/Chess_pdt60.png'>
+            <img id="imgB" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/f/f1/Chess_ndt60.png'>
+            <img id="imgC" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/8/81/Chess_bdt60.png'>
+            <img id="imgD" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/a/a0/Chess_rdt60.png'>
+            <img id="imgE" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/a/af/Chess_qdt60.png'>
+            <img id="imgF" draggable="true" ondragstart="chessNamespace.drag(event)" src='https://upload.wikimedia.org/wikipedia/commons/e/e3/Chess_kdt60.png'>
+            <div>
+                <label style="float:right">Mate in: <input id="moves" type="number" value="2" min="1" max="10" style="float:right"/></label>
+            </div>
+        </div>
+        <canvas id="mycanvas"  ondrop="chessNamespace.drop(event)" ondragover="chessNamespace.allowDrop(event)" width="480" height="480" style="border: 1px solid gray"  />
+    </div>
+</body>
+</html>
