@@ -10,7 +10,7 @@ from contextlib import closing
 from re import findall
 
 
-WORD_LIST = "http://www.becomeawordgameexpert.com/wordlists7.htm"
+WORD_LIST = "http://www.allscrabblewords.com/7-letter-words/"
 WORD_LENGTH = 7
 
 class ParseFindWords(HTMLParser):
@@ -20,16 +20,17 @@ class ParseFindWords(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
         self.data = ""
-        self.fontflg = False
+        self.getit = False
     def handle_starttag(self, tag, attrs):
-        if tag == 'font':
-            self.fontflg = True
+        if tag == 'a':
+            for attr in attrs:
+                if attr[0] == 'href':
+                    if attr[1].startswith('/word-description/'):
+                        self.getit = True
     def handle_data(self, data):
-        if self.fontflg:
-            self.data = " %s" % data.strip()
-    def handle_endtag(self, tag):
-        if tag == 'font':
-            self.fontflg = False
+        if self.getit:
+            self.data += " %s" % data.strip().upper()
+        self.getit = False
             
 class WordList():
     """
@@ -43,14 +44,16 @@ class WordList():
         parser = ParseFindWords()
         with closing(urlopen(real_url)) as page:
             self.data = page.read()
-            self.wordlist = parser.feed(self.data)
+            parser.feed(self.data)
+        self.wordlist = parser.data
+
     def findStart(self, runstr):
         """
         Find all words that begin with the sequence passed.
         """
         dots = '.......'[0: WORD_LENGTH - len(runstr)]
         retv = []
-        for wurd in findall(' %s%s' % (runstr, dots), self.data):
+        for wurd in findall(' %s%s' % (runstr, dots), self.wordlist):
             retv.append(wurd.strip()[len(runstr):])
         return retv
     def findEnd(self, runstr):
@@ -59,7 +62,7 @@ class WordList():
         """
         dots = '......'[0: WORD_LENGTH - len(runstr)]
         retv = []
-        for wurd in findall(' %s%s' % (dots, runstr), self.data):
+        for wurd in findall(' %s%s' % (dots, runstr), self.wordlist):
             retv.append(wurd.strip()[0:WORD_LENGTH - len(runstr)])
         return retv
 
