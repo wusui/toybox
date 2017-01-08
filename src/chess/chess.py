@@ -32,7 +32,7 @@ def getpost():
         - Dialog box width.
     """
     logging.basicConfig(filename='results.log',level=logging.DEBUG)
-    logging.info('new message')
+    logging.info('next problem')
     cgitb.enable()
     form = cgi.FieldStorage()
     instr = form['data'].value
