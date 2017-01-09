@@ -37,7 +37,7 @@ def getpost():
     form = cgi.FieldStorage()
     instr = form['data'].value
     logging.info(instr)
-    answer = solver_filter(instr)
+    answer = solver_filter(instr, logging.info)
     logging.info(answer)
     print 'Content-type: text/html'
     print

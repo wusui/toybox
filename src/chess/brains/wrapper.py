@@ -3,13 +3,15 @@
 #    Licensed under the GPL 3 license.
 from board import board
 
-def solver_filter(in_data):
+def solver_filter(in_data, pfunc):
     """
     Generate a board from in_data. Send an error message if appropriate
     """
-    cboard = board(in_data)
+    cboard = board(in_data, pfunc)
     if len(cboard.msg_type) > 0:
         return make_emesg(cboard)
+    cboard.pfunc('Sample use of pfunc (not permanent)')
+    # TO DO: add check check here
     return "ATTENTION|Chess solver not yet implemented|120|360"
 
 def make_emesg(cboard):

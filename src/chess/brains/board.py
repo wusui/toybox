@@ -14,10 +14,11 @@ class board(object):
         
     self.msg_type either describes the error or indicates a solution.
     """
-    def __init__(self, setup):
+    def __init__(self, setup, pfunc):
         """
         setup contains a board setup string as described in ../chess.py
         """
+        self.pfunc = pfunc
         self.board = []
         for _ in range(0, 8):
             self.board.append(8 * [0])
