@@ -1,6 +1,14 @@
 #!/usr/bin/python
 #    Copyright (C) 2017 Warren Usui (warrenusui@eartlink.net)
 #    Licensed under the GPL 3 license.
+WHITE = 0
+BLACK = 10
+PAWN = 1
+KNIGHT = 2
+BISHOP = 3
+ROOK = 4
+QUEEN = 5
+KING = 6
 class board(object):
     """
     Representation of the chessboard.

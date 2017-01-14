@@ -1,7 +1,10 @@
 #!/usr/bin/python
 #    Copyright (C) 2017 Warren Usui (warrenusui@eartlink.net)
 #    Licensed under the GPL 3 license.
+from board import WHITE
+from board import BLACK
 from board import board
+from cmoves import check_check
 
 def solver_filter(in_data, pfunc):
     """
@@ -10,8 +13,8 @@ def solver_filter(in_data, pfunc):
     cboard = board(in_data, pfunc)
     if len(cboard.msg_type) > 0:
         return make_emesg(cboard)
-    cboard.pfunc('Sample use of pfunc (not permanent)')
-    # TO DO: add check check here
+    if check_check(cboard, BLACK):
+        return "SET UP ERROR|Black should not start in check|120|360"
     return "ATTENTION|Chess solver not yet implemented|120|360"
 
 def make_emesg(cboard):
