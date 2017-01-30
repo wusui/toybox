@@ -8,8 +8,7 @@ Cgi script to collect chess problem data.  Returns a solution, if possible.
 import cgi
 import cgitb
 import logging
-from brains.wrapper import solver_filter
-
+from find_common import find_movies_in_common
 
 def getpost():
     """
@@ -38,8 +37,8 @@ def getpost():
     form = cgi.FieldStorage()
     instr = form['data'].value
     logging.info(instr)
-    answer = solver_filter(instr, logging.info)
-    logging.info(answer)
+    name = instr.split('|')
+    answer = find_movies_in_common(name[0], name[1])
     print 'Content-type: text/html'
     print
     print answer
