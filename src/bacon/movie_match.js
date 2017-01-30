@@ -5,6 +5,10 @@
 movie_matchNamespace = function() {
     
 function handle_text(fname) {
+    //
+    // Make sure data is entered in an actor field
+    // Return text entered.
+    //
     var astr = document.getElementById(fname);
     var rettxt = astr.value
     if (rettxt.length == 0) {
@@ -16,6 +20,10 @@ function handle_text(fname) {
 }
 
 function doit() {
+    //
+    // Collect the names of two actors and send that info to the
+    // movie matching agent.
+    //
     var actor1 = handle_text('actor1')
     if (actor1.length == 0) {
         return;
@@ -44,8 +52,6 @@ function sendpost(postdata, remProg, server, server_sent_response) {
 function hndl_svr_resp() {
     //
     // When the server responds, display the output in a modal dialog.
-    // The response is an or-bar separated set of fields.  See chess.py
-    // for a further description of the format
     //
     if (server.readyState==4 && server.status==200)
     {
@@ -55,7 +61,7 @@ function hndl_svr_resp() {
 }
 
     //
-    // Returns for the chessNamespace wrapper
+    // Returns for the movie_matchNamespace wrapper
     //
     return {
         doit:doit
