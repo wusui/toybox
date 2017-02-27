@@ -1,24 +1,41 @@
 #!/usr/bin/python
 #    Copyright (C) 2017 Warren Usui (warrenusui@eartlink.net)
 #    Licensed under the GPL 3 license.
+from copy import deepcopy
 from board import PAWN
 from board import KNIGHT
 from board import BISHOP
 from board import ROOK
 from board import QUEEN
 from board import KING
-def check_check(cboard, color):
+
+def find_king(cboard, color):
     """
-    Find the king, and then find all pieces that can take it.
+    Find the king.
     """
     kpos = []
     for row in range(0,8):
         for col in range(0,8):
             if cboard.board[row][col] == color + KING:
                 kpos = [row, col]
-                break
-        if kpos:
-            break
+                return kpos
+    return [-1,-1]
+
+def i_am_pinned(cboard, mypos, color):
+    withme = check_check(cboard, color)
+    tboard = deepcopy(cboard)
+    tboard[mypos[0]][mypos[1]] = 0
+    sansme = check_check(tboard, color)
+    for piece in sansme:
+        if not piece in withme:
+            return piece
+    return []
+
+def check_check(cboard, color):
+    """
+    Find the king, and then find all pieces that can take it.
+    """
+    kpos = find_king(cboard, color)
     return can_move(cboard, kpos, color)
 
 def can_move(cboard, pos_2_chk, color):

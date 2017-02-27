@@ -11,7 +11,7 @@ from contextlib import closing
 
 def read_data(real_url, in_parser): 
     """
-    Read the url (real_url) and extract the datga using the in_parser
+    Read the url (real_url) and extract the data using the in_parser
     class passed.  All the in_parser classes are assumed to pass the
     expected result back in self.data.
     """
@@ -116,16 +116,23 @@ def movie_page_to_title(movie):
     mpage = "http://www.imdb.com%s" % movie
     return read_data(mpage, MoviePageToTitle)
 
-def find_movies_in_common(actor1, actor2):
+def get_movies_in_common(actor1, actor2):
     """
     Given the names of two actors, find the movies that they
-    both appeared in.  Return result in appropriate HTML text.
+    both appeared in.
     """
     p1 = name_to_actor_page(actor1) 
     list1 = actor_page_to_movie_list(p1)
     p2 = name_to_actor_page(actor2)
     list2 = actor_page_to_movie_list(p2)
-    common = list(set(list1) & set(list2))
+    return list(set(list1) & set(list2))
+
+def find_movies_in_common(actor1, actor2):
+    """
+    Given the names of two actors, find the movies that they
+    both appeared in.  Return result in appropriate HTML text.
+    """
+    common = get_movies_in_common(actor1, actor2)
     titles = []
     for movie in common:
         mtitle = movie_page_to_title(movie)
