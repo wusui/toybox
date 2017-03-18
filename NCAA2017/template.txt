@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>XRUNDLEX</title>
+<link rel="icon" href="../../toybox/src//main_page/basketball.png">
+    <style>
+h1, tr, div, p, td {
+    text-align: center;
+    font-weight: bold;
+    font-family: Arial,sans-serif;
+}
+    table {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    </style>
+</head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<body>
+<center>
+<br>
+<h1>XRUNDLEX</h1>
+<br>
+<table border="1">
+    <tr>
+        <th>NAME</th>
+        <th>
+            <div>Winning</div><div>Outcomes</div>
+        </th>
+        <th>Percentage</th>
+        XMATCHUPHEADERSX
+    </tr>
+    XTABLEDATAX
+</table>
+</center>
+</body>
+</html>
