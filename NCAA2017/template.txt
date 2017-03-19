@@ -1,7 +1,7 @@
 <html>
 <head>
 <title>XRUNDLEX</title>
-<link rel="icon" href="../../toybox/src//main_page/basketball.png">
+<link rel="icon" href="../../src/main_page/basketball.png">
     <style>
 h1, tr, div, p, td {
     text-align: center;
