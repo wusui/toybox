@@ -6,12 +6,12 @@ from check_data import HandleEspnGroup
 from get_picks import get_reality
 
 def score_so_far(nlist, my_picks):
-    pts = [1,2]
     score = 0
-    for round in range(0,2):
+    for round in range(0,len(nlist)):
+        factor = 2**round
         for winner in nlist[round]:
             if winner in my_picks['picks'][round]:
-                score += pts[round]
+                score += factor
     return score
 
 class player(object):
@@ -103,7 +103,7 @@ def gen_possible(nlist, stash, names):
     return xlate(pvec)
 
 def compute_it(rundle):
-    ofname = sep.join(['data', 'aseparate_reality.json'])
+    ofname = sep.join(['data', 'reality.json'])
     if not isfile(ofname):
         with open(ofname, 'w') as f:
             json.dump(get_reality(), f)
