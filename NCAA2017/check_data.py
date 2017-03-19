@@ -5,6 +5,10 @@ from os import sep
 from os import listdir
 from os.path import isfile
 
+ESPN = "http://games.espn.com/"
+ENTRY = ESPN + "tournament-challenge-bracket/2017/en/entry?entryID=%s"
+TOURNEY_DATA = ESPN + 'mens-college-basketball/tournament/bracket'
+
 class ParseText(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
@@ -74,13 +78,15 @@ def check_data(group_name):
         return
     for i in range(0, len(plist)):
         parser = ParseText()
-        in_url = "http://games.espn.com/tournament-challenge-bracket/2017/en/entry?entryID=%s" % nlist[i]
+        in_url = ENTRY % nlist[i]
         with closing(urlopen(in_url)) as page:
             parser.feed(page.read())
         if parser.name != plist[i]:
-            print 'Name and number do not match %s vs. %s' % (parser.name, plist[i])
+            print 'Name and number do not match %s vs. %s' % (parser.name,
+                        plist[i])
         if group_id not in parser.ingroup:
-            print 'group number is not linked to bracket page -- bracke page number is probably wrong'
+            print 'group number is not linked to bracket page'
+            print '     bracket page number is probably wrong'
 
 if __name__ == "__main__":
     HandleEspnGroup().caller(check_data)

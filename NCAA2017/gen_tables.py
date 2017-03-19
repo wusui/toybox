@@ -39,7 +39,8 @@ def bgcolor(denom, numer):
 def game_headers(pattern):
     ostrm = ''
     for tindx in range(0, len(pattern), 2):
-        ostrm += '<th> <div>%s</div><div>%s</div> </th>' % (pattern[tindx], pattern[tindx+1])
+        ostrm += '<th> <div>%s</div><div>%s</div> </th>' % (pattern[tindx],
+                pattern[tindx+1])
     return ostrm
 
 def add_plr_col(otable, field):

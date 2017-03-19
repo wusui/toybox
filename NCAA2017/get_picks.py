@@ -4,6 +4,8 @@ from contextlib import closing
 from HTMLParser import HTMLParser
 from os import sep
 from check_data import HandleEspnGroup
+from check_data import ENTRY
+from check_data import TOURNEY_DATA
 
 class ParseEntry(HTMLParser):
     def __init__(self):
@@ -72,7 +74,7 @@ class ParseWins(HTMLParser):
 
 def get_reality():
     retv = []
-    with closing(urlopen('http://www.espn.com/mens-college-basketball/tournament/bracket')) as page:
+    with closing(urlopen(TOURNEY_DATA)) as page:
         httpdata = page.read()
     for cnt in range(2,7):
         parser = ParseWins(cnt)
@@ -86,7 +88,9 @@ def get_teams(in_url):
     parser = ParseEntry()
     with closing(urlopen(in_url)) as page:
         parser.feed(page.read())
-    return (parser.name, [parser.data[64:96], parser.data[96:112], parser.data[112:120], parser.data[120:124], parser.data[124:126], [parser.winner]])
+    return (parser.name, [parser.data[64:96], parser.data[96:112],
+            parser.data[112:120], parser.data[120:124],
+            parser.data[124:126], [parser.winner]])
 
 def get_picks(group):
     ret_data = []
@@ -95,7 +99,7 @@ def get_picks(group):
         indata = f.read()
     idata = indata.strip().split('\n')
     for picks in idata:
-        pinfo = "http://games.espn.com/tournament-challenge-bracket/2017/en/entry?entryID=%s" % picks
+        pinfo = ENTRY % picks
         tinfo = get_teams(pinfo)
         print "Getting picks for %s" % tinfo[0]
         ret_data.append(tinfo)
