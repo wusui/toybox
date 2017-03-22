@@ -35,3 +35,9 @@ The 'python computencaa.py' run also creates two files in the directory for this
 
 'python gen_tables.py' can then be run create the pages.
 
+NOTE:
+----
+The setting of the reality.json file does not work automatically due to changes
+made in the format of the bracket that ESPN displays. For the 2017 tournament,
+I have been editing this json file manually
+

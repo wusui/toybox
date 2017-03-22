@@ -120,7 +120,7 @@ def gen_display(rundle):
         plr['pct'] = get_pct(plr['score'], denom) 
     with open(sep.join(['data', 'reality.json']), 'r') as f:
         happened = json.load(f)
-    wpattern = happened[1]
+    wpattern = happened[-1]
     game_head = game_headers(wpattern)
     htmld = htmld.replace('XMATCHUPHEADERSX', game_head)
     otable = ''
