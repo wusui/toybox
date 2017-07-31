@@ -69,7 +69,7 @@ def main_rtn():
     init()
     for pfile in real_modules:
         print pfile
-        logging.info('Chceking %s', pfile)
+        logging.info('Checking %s', pfile)
         path_pfile = "%s%s%s" % (real_location, separator, pfile)
         run_check(path_pfile, 'pylint')
         run_check(path_pfile, 'pep8')
